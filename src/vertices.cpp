@@ -27,12 +27,21 @@ GLfloat axis[] = {
 
 		0.0f, 0.0f, 0.0f,      0.0f,0.0f,1.0f,//5
 		0.0f, 0.0f, 1.0f,      0.0f,0.0f,1.0f,//6
-
-
-
 		};
 
 GLfloat test_line2[20];
+
+GLfloat test_cube[] = {
+         0.5f,  0.5f, 0.0f,  // Top Right
+         0.5f, -0.5f, 0.0f,  // Bottom Right
+        -0.5f, -0.5f, 0.0f,  // Bottom Left
+        -0.5f,  0.5f, 0.0f   // Top Left
+    };
+    GLuint test_cube_indices[] = {  // Note that we start from 0!
+        0, 1, 3,  // First Triangle
+        1, 2, 3   // Second Triangle
+    };
+
 void set_array() {
 
 	for (int i = 0; i < 20;) {

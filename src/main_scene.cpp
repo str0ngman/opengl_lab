@@ -35,6 +35,8 @@
 const GLuint WIDTH = 800, HEIGHT = 600;
 extern GLfloat test_line2[30];
 extern GLfloat axis[60];
+extern GLfloat test_cube[12];
+extern GLfloat test_cube_indices[6];
 int main(int argc, char* argv[]){
  // set_array();
  // int i = 0;
