@@ -118,10 +118,11 @@ int main(int argc, char* argv[]){
   the render context  initialization stage
   ---------------------------------*/
 
-  //labShader_test();
+  //labShaders
   /*---------------------------------*/
    lab_shader triangleShader("../shader/init_vert.glsl","../shader/init_frag.glsl");
-   lab_shader cube_shader("../shader/basicshape_vert.glsl","../shader/basicshape_frag.glsl");
+
+   lab_shader cube_shader("../shader/basic_cube_vert.glsl","../shader/basic_cube_frag.glsl");
 
 
   /*----------------------------------
