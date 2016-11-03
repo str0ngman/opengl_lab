@@ -71,6 +71,10 @@ int main(int argc, char* argv[]){
 
   std::cout<<"preparation finished."<<std::endl;
 
+
+  /*----------------------------------
+   * axis vao vbo
+   * --------------------------------*/
   GLuint VAO,VBO;
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
@@ -88,8 +92,26 @@ int main(int argc, char* argv[]){
 
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0);
+  /*----------------------------------
+   * basic shape vao vbo
+   * --------------------------------*/
+  GLuint cube_vao, cube_vbo, cube_ebo;
+  glGenVertexArrays(1, &cube_vao);
+  glGenBuffers(1, &cube_vbo);
+  glGenBuffers(1, &cube_ebo);
 
+  glBindVertexArray(cube_vao);
+  glBindBuffer(GL_ARRAY_BUFFER, cube_vbo);
+  glBufferData(GL_ARRAY_BUFFER,sizeof(test_cube),test_cube, GL_STATIC_DRAW);
 
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cube_ebo);
+   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(test_cube_indices), test_cube_indices, GL_STATIC_DRAW);
+
+   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+
+  glEnableVertexAttribArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER,0);
+  glBindVertexArray(0);
 
 /*---------------------------------
   test code should be set after
@@ -99,6 +121,7 @@ int main(int argc, char* argv[]){
   //labShader_test();
   /*---------------------------------*/
    lab_shader triangleShader("../shader/init_vert.glsl","../shader/init_frag.glsl");
+   lab_shader cube_shader("../shader/basicshape_vert.glsl","../shader/basicshape_frag.glsl");
 
 
   /*----------------------------------
@@ -121,8 +144,21 @@ int main(int argc, char* argv[]){
 
 
     glDisableClientState(GL_VERTEX_ARRAY);
+
+    cube_shader.Use();
+    glBindVertexArray(cube_vao);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+
     glfwSwapBuffers(window);
   }
+
+  glDeleteVertexArrays(1, &VAO);
+  glDeleteBuffers(1, &VBO);
+
+  glDeleteVertexArrays(1, &cube_vao);
+  glDeleteBuffers(1, &cube_vbo);
+
   glfwTerminate();
 
 
