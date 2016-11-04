@@ -64,12 +64,12 @@ int main(int argc, char* argv[]){
   glewExperimental = GL_TRUE;
 
   glewInit();
-
+  std::cout<<glGetError()<<std::endl;
   int width, height;
   glfwGetFramebufferSize(window, &width, &height);
   glViewport(0,0,width,height);
 
-
+  std::cout<<glGetError()<<std::endl;
   std::cout<<"preparation finished."<<std::endl;
 
 
@@ -157,11 +157,18 @@ int main(int argc, char* argv[]){
   //load create texture and generate mipmaps
   int cftex_width, cftex_height;
   unsigned char* image = SOIL_load_image("../res/jpg/wall.jpg",&cftex_width, &cftex_height,0,SOIL_LOAD_RGB);
-  glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,cftex_width,cftex_height,0,GL_RGB,GL_UNSIGNED_BYTE,image);
+  glTexImage2D(GL_TEXTURE_2D,
+		  0,
+		  GL_RGB,
+		  cftex_width,cftex_height,
+		  0,
+		  GL_RGB,
+		  GL_UNSIGNED_BYTE,
+		  image);
   glGenerateMipmap(GL_TEXTURE_2D);
   SOIL_free_image_data(image);
   glBindTexture(GL_TEXTURE_2D, 0);
-
+  std::cout<<glGetError()<<std::endl;
 
 
 /*---------------------------------
@@ -195,20 +202,20 @@ int main(int argc, char* argv[]){
     glDrawArrays(GL_LINES,0,6);
     glBindVertexArray(0);
 
-    glDisableClientState(GL_VERTEX_ARRAY);
+   // glDisableClientState(GL_VERTEX_ARRAY);
 
 //draw basic cube
-    //cube_shader.Use();
-    //glBindVertexArray(cube_vao);
-    //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    //glBindVertexArray(0);
+    cube_shader.Use();
+    glBindVertexArray(cube_vao);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
 
 //draw transformed textured cube
     transformWtex_shader.Use();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D,cubeface_texture1);
-    glUniform1i(glGetUniformLocation(transformWtex_shader.Program,"ourTexture1"),0);
-
+    glUniform1i(glGetUniformLocation(transformWtex_shader.Program,"ourTexture"),0);
+    std::cout<<glGetError()<<std::endl;
     glBindVertexArray(cubeface_vao);
     glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
     glBindVertexArray(0);
@@ -228,13 +235,7 @@ int main(int argc, char* argv[]){
   return 0;
 }
 
-//void key_callback(GLFWwindow* window, int key, int scancode, int action,
-//		  int mode){
-//  if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS){
-//    glfwSetWindowShouldClose(window, GL_TRUE);
-//  }
-//}
-//
+
 
 
 
