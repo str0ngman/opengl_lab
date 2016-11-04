@@ -37,6 +37,7 @@ extern GLfloat test_line2[30];
 extern GLfloat axis[60];
 extern GLfloat test_cube[12];
 extern GLfloat test_cube_indices[6];
+extern GLfloat cube_face[32];
 int main(int argc, char* argv[]){
  // set_array();
  // int i = 0;
@@ -105,13 +106,63 @@ int main(int argc, char* argv[]){
   glBufferData(GL_ARRAY_BUFFER,sizeof(test_cube),test_cube, GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cube_ebo);
-   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(test_cube_indices), test_cube_indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(test_cube_indices), test_cube_indices, GL_STATIC_DRAW);
 
-   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 
   glEnableVertexAttribArray(0);
   glBindBuffer(GL_ARRAY_BUFFER,0);
   glBindVertexArray(0);
+
+ /*----------------------------------
+  * transformed cube with color and texture
+  * --------------------------------*/
+  GLuint cubeface_vao, cubeface_vbo, cubeface_ebo;
+  glGenVertexArrays(1,&cubeface_vao);
+  glGenBuffers(1, &cubeface_vbo);
+  glGenBuffers(1, &cubeface_ebo);
+
+  glBindVertexArray(cubeface_vao);
+  glBindBuffer(GL_ARRAY_BUFFER,cubeface_vbo);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(cube_face),cube_face, GL_STATIC_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeface_ebo);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(test_cube_indices),test_cube_indices,GL_STATIC_DRAW);
+
+  //position attribute
+  glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,8*sizeof(GLfloat),(GLvoid*)0);
+  glEnableVertexAttribArray(0);
+
+  //color attribute
+  glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,8*sizeof(GLfloat),(GLvoid*)3);
+  glEnableVertexAttribArray(1);
+
+  //TexCoord attribute
+  glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,8*sizeof(GLfloat),(GLvoid*)6);
+  glEnableVertexAttribArray(2);
+
+  glBindVertexArray(0);
+
+  //texture creation
+  GLuint cubeface_texture1;
+  glGenTextures(1,&cubeface_texture1);
+  glBindTexture(GL_TEXTURE_2D,cubeface_texture1);
+
+  //set texture paramter
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  //load create texture and generate mipmaps
+  int cftex_width, cftex_height;
+  unsigned char* image = SOIL_load_image("../res/jpg/wall.jpg",&cftex_width, &cftex_height,0,SOIL_LOAD_RGB);
+  glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,cftex_width,cftex_height,0,GL_RGB,GL_UNSIGNED_BYTE,image);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  SOIL_free_image_data(image);
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+
 
 /*---------------------------------
   test code should be set after
@@ -124,6 +175,7 @@ int main(int argc, char* argv[]){
 
    lab_shader cube_shader("../shader/basic_cube_vert.glsl","../shader/basic_cube_frag.glsl");
 
+   lab_shader transformWtex_shader("../shader/transformWtexture_vert.glsl","../shader/transformWtexture_frag.glsl");
 
   /*----------------------------------
    * render loop starts here
@@ -137,18 +189,28 @@ int main(int argc, char* argv[]){
     glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
+//draw axis
     triangleShader.Use();
     glBindVertexArray(VAO);
     glDrawArrays(GL_LINES,0,6);
     glBindVertexArray(0);
 
-
-
     glDisableClientState(GL_VERTEX_ARRAY);
 
-    cube_shader.Use();
-    glBindVertexArray(cube_vao);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+//draw basic cube
+    //cube_shader.Use();
+    //glBindVertexArray(cube_vao);
+    //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    //glBindVertexArray(0);
+
+//draw transformed textured cube
+    transformWtex_shader.Use();
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D,cubeface_texture1);
+    glUniform1i(glGetUniformLocation(transformWtex_shader.Program,"ourTexture1"),0);
+
+    glBindVertexArray(cubeface_vao);
+    glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
     glBindVertexArray(0);
 
     glfwSwapBuffers(window);
