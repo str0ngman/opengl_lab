@@ -48,6 +48,8 @@ int main(int argc, char* argv[]){
 //  }
 
 
+
+
   std::cout<<"starting GLFW context, openGL3.3"<<std::endl;
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
@@ -72,6 +74,22 @@ int main(int argc, char* argv[]){
   std::cout<<glGetError()<<std::endl;
   std::cout<<"preparation finished."<<std::endl;
 
+
+
+
+  /*texture experiment*/
+
+  GLfloat v[] = {
+          // Positions          // Colors           // Texture Coords
+           1.0f,  1.0f, -0.1f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // Top Right
+           1.0f,  0.0f, -0.1f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // Bottom Right
+           0.0f,  1.0f, -0.1f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // Bottom Left
+           0.5f,  0.0f, -0.1f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // Top Left
+      };
+
+  GLuint i[] = {3,0,1,2,0,3};
+
+  lab_shader texture_shader("../shader/texture_vert.glsl","../shader/texture_frag.glsl");
 
   /*----------------------------------
    * axis vao vbo
@@ -117,61 +135,43 @@ int main(int argc, char* argv[]){
  /*----------------------------------
   * transformed cube with color and texture
   * --------------------------------*/
-  GLuint cubeface_vao, cubeface_vbo, cubeface_ebo;
-  glGenVertexArrays(1,&cubeface_vao);
-  glGenBuffers(1, &cubeface_vbo);
-  glGenBuffers(1, &cubeface_ebo);
+  GLuint v_vbo, v_vao, v_ebo;
+  glGenVertexArrays(1,&v_vao);
+  glGenBuffers(1,&v_vbo);
+  glGenBuffers(1,&v_ebo);
+  glBindVertexArray(v_vao);
+  glBindBuffer(GL_ARRAY_BUFFER,v_vbo);
+  glBufferData(GL_ARRAY_BUFFER,sizeof(v),v,GL_STATIC_DRAW);
 
-  glBindVertexArray(cubeface_vao);
-  glBindBuffer(GL_ARRAY_BUFFER,cubeface_vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(cube_face),cube_face, GL_STATIC_DRAW);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,v_ebo);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(i),i,GL_STATIC_DRAW);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cubeface_ebo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(test_cube_indices),test_cube_indices,GL_STATIC_DRAW);
-
-  //position attribute
   glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,8*sizeof(GLfloat),(GLvoid*)0);
   glEnableVertexAttribArray(0);
-
-  //color attribute
-  glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,8*sizeof(GLfloat),(GLvoid*)3);
+  glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,8*sizeof(GLfloat),(GLvoid*)(3*sizeof(GLfloat)));
   glEnableVertexAttribArray(1);
-
-  //TexCoord attribute
-  glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,8*sizeof(GLfloat),(GLvoid*)6);
+  glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,8*sizeof(GLfloat),(GLvoid*)(6*sizeof(GLfloat)));
   glEnableVertexAttribArray(2);
 
   glBindVertexArray(0);
 
-  //texture creation
-  GLuint cubeface_texture1;
-  glGenTextures(1,&cubeface_texture1);
-  glBindTexture(GL_TEXTURE_2D,cubeface_texture1);
+  GLuint texture;
+  glGenTextures(1,&texture);
+  glBindTexture(GL_TEXTURE_2D,texture);
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
-  //set texture paramter
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  //load create texture and generate mipmaps
-  int cftex_width, cftex_height;
-  unsigned char* image = SOIL_load_image("../res/jpg/wall.jpg",&cftex_width, &cftex_height,0,SOIL_LOAD_RGB);
-  glTexImage2D(GL_TEXTURE_2D,
-		  0,
-		  GL_RGB,
-		  cftex_width,cftex_height,
-		  0,
-		  GL_RGB,
-		  GL_UNSIGNED_BYTE,
-		  image);
+  int w, h;
+  unsigned char* image = SOIL_load_image("../res/jpg/wall.jpg",&w, &h,0,SOIL_LOAD_RGB);
+  glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,w,h,0,GL_RGB,GL_UNSIGNED_BYTE,image);
   glGenerateMipmap(GL_TEXTURE_2D);
   SOIL_free_image_data(image);
-  glBindTexture(GL_TEXTURE_2D, 0);
-  std::cout<<glGetError()<<std::endl;
+  glBindTexture(GL_TEXTURE_2D,0);
 
 
-/*---------------------------------
+  /*---------------------------------
   test code should be set after
   the render context  initialization stage
   ---------------------------------*/
@@ -182,7 +182,7 @@ int main(int argc, char* argv[]){
 
    lab_shader cube_shader("../shader/basic_cube_vert.glsl","../shader/basic_cube_frag.glsl");
 
-   lab_shader transformWtex_shader("../shader/transformWtexture_vert.glsl","../shader/transformWtexture_frag.glsl");
+
 
   /*----------------------------------
    * render loop starts here
@@ -197,26 +197,23 @@ int main(int argc, char* argv[]){
     glClear(GL_COLOR_BUFFER_BIT);
 
 //draw axis
-    triangleShader.Use();
-    glBindVertexArray(VAO);
+   triangleShader.Use();
+   glBindVertexArray(VAO);
     glDrawArrays(GL_LINES,0,6);
     glBindVertexArray(0);
 
-   // glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
 
 //draw basic cube
-    cube_shader.Use();
-    glBindVertexArray(cube_vao);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+   cube_shader.Use();
+   glBindVertexArray(cube_vao);
+   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 
 //draw transformed textured cube
-    transformWtex_shader.Use();
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D,cubeface_texture1);
-    glUniform1i(glGetUniformLocation(transformWtex_shader.Program,"ourTexture"),0);
-    std::cout<<glGetError()<<std::endl;
-    glBindVertexArray(cubeface_vao);
+    glBindTexture(GL_TEXTURE_2D,texture);
+    texture_shader.Use();
+    glBindVertexArray(v_vao);
     glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
     glBindVertexArray(0);
 
@@ -228,6 +225,10 @@ int main(int argc, char* argv[]){
 
   glDeleteVertexArrays(1, &cube_vao);
   glDeleteBuffers(1, &cube_vbo);
+
+  glDeleteVertexArrays(1,&v_vao);
+  glDeleteBuffers(1,&v_vbo);
+  glDeleteBuffers(1,&v_ebo);
 
   glfwTerminate();
 
