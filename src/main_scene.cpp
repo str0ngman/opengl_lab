@@ -14,7 +14,8 @@
 
 //glm
 #include<glm/glm.hpp>
-
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
 //soil
 #include<SOIL/SOIL.h>
 
@@ -213,6 +214,12 @@ int main(int argc, char* argv[]){
 //draw transformed textured cube
     glBindTexture(GL_TEXTURE_2D,texture);
     texture_shader.Use();
+    glm::mat4 trans;
+    trans=glm::translate(trans,glm::vec3(0.1f,-0.1f,0.0f));
+    trans=glm::rotate(trans,(GLfloat)glfwGetTime()*5.0f,glm::vec3(0.5f,0.5f,0.0f));
+
+    GLuint transformLoc = glGetUniformLocation(texture_shader.Program,"transform");
+    glUniformMatrix4fv(transformLoc,1,GL_FALSE,glm::value_ptr(trans));
     glBindVertexArray(v_vao);
     glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
     glBindVertexArray(0);
