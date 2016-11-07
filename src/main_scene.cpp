@@ -63,7 +63,7 @@ int main(int argc, char* argv[]){
   glfwMakeContextCurrent(window);
 
   glfwSetKeyCallback(window, key_callback);
-  
+
   glewExperimental = GL_TRUE;
 
   glewInit();
@@ -216,7 +216,7 @@ int main(int argc, char* argv[]){
     texture_shader.Use();
     glm::mat4 trans;
     trans=glm::translate(trans,glm::vec3(0.1f,-0.1f,0.0f));
-    trans=glm::rotate(trans,(GLfloat)glfwGetTime()*5.0f,glm::vec3(0.5f,0.5f,0.0f));
+    trans=glm::rotate(trans,(GLfloat)glfwGetTime()*50.0f,glm::vec3(0.5f,0.5f,0.0f));
 
     GLuint transformLoc = glGetUniformLocation(texture_shader.Program,"transform");
     glUniformMatrix4fv(transformLoc,1,GL_FALSE,glm::value_ptr(trans));
