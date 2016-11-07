@@ -299,7 +299,7 @@ int main(int argc, char* argv[]){
 
     glBindVertexArray(vao_coord);
 
-  //2.8 final: render 10 3d cubes in the scene using for loop
+  //2.8 final: render 10 3d cubes in the scene using for  loop
   /*  for (GLuint i = 0; i < 10; i++)
           {
               // Calculate the model matrix for each object and pass it to shader before drawing
