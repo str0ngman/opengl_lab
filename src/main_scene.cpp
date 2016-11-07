@@ -39,6 +39,8 @@ extern GLfloat axis[60];
 extern GLfloat test_cube[12];
 extern GLfloat test_cube_indices[6];
 extern GLfloat cube_face[32];
+extern GLfloat coord_cube[20];
+extern GLfloat coord_cube_indices[6];
 int main(int argc, char* argv[]){
  // set_array();
  // int i = 0;
@@ -172,6 +174,50 @@ int main(int argc, char* argv[]){
   glBindTexture(GL_TEXTURE_2D,0);
 
 
+  /*----------------------------------
+   * 2.8 Coordinate system textured cube
+   * --------------------------------*/
+  GLuint vbo_coord, vao_coord, ebo_coord;
+  glGenVertexArrays(1, &vao_coord);
+  glGenBuffers(1, &vbo_coord);
+  glGenBuffers(1, &ebo_coord);
+
+  glBindVertexArray(vao_coord);
+  glBindBuffer(GL_ARRAY_BUFFER,vbo_coord);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(coord_cube), coord_cube, GL_STATIC_DRAW);
+
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ebo_coord);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(coord_cube_indices), coord_cube_indices, GL_STATIC_DRAW);
+
+  glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE, 5*sizeof(GLfloat),(GLvoid*)0);
+  glEnableVertexAttribArray(0);
+
+  glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE, 5*sizeof(GLfloat),(GLvoid*)(3*sizeof(GLfloat)));
+  glEnableVertexAttribArray(2);
+
+  glBindVertexArray(0);
+
+  //Texture
+  GLuint texture_coord;
+  glGenTextures(1,&texture_coord);
+  glBindTexture(GL_TEXTURE_2D, texture_coord);
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+  int coord_width, coord_height;
+  unsigned char* coord_cube_image = SOIL_load_image("../res/jpg/wall.jpg",
+		  &coord_width,&coord_height,0, SOIL_LOAD_RGB);
+  glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,
+		  coord_width, coord_height,0,GL_RGB,GL_UNSIGNED_BYTE,coord_cube_image);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  SOIL_free_image_data(coord_cube_image);
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+
+
   /*---------------------------------
   test code should be set after
   the render context  initialization stage
@@ -183,10 +229,10 @@ int main(int argc, char* argv[]){
 
    lab_shader cube_shader("../shader/basic_cube_vert.glsl","../shader/basic_cube_frag.glsl");
 
-
+   lab_shader CoordSystem_shader("../shader/coordinateSystem_vert.glsl","../shader/coordinateSystem_frag.glsl");
 
   /*----------------------------------
-   * render loop starts here
+   *while loop
    * --------------------------------*/
   std::cout<<"Entering while loop"<<std::endl;
   //glLineWidth(4.0);
@@ -224,6 +270,34 @@ int main(int argc, char* argv[]){
     glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
     glBindVertexArray(0);
 
+//draw 2.8 coordinate system coord_cube
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture_coord);
+    glUniform1i(glGetUniformLocation(CoordSystem_shader.Program,"ourTexture1"),0);
+
+    CoordSystem_shader.Use();
+
+    glm::mat4 cordSys_model;
+    glm::mat4 cordSys_view;
+    glm::mat4 cordSys_projection;
+
+    cordSys_model = glm::rotate(cordSys_model,-55.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+    cordSys_view = glm::translate(cordSys_view,glm::vec3(0.0f, 0.0f, -3.0f));
+    cordSys_projection = glm::perspective(45.0f, (GLfloat)WIDTH/(GLfloat)HEIGHT,0.1f, 100.0f);
+
+    GLint modelLoc = glGetUniformLocation(CoordSystem_shader.Program,"model");
+    GLint viewLoc = glGetUniformLocation(CoordSystem_shader.Program,"view");
+    GLint projLoc = glGetUniformLocation(CoordSystem_shader.Program,"projection");
+
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cordSys_model));
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(cordSys_view));
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(cordSys_projection));
+
+
+    glBindVertexArray(vao_coord);
+    glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+//draw 2.8 end
     glfwSwapBuffers(window);
   }
 

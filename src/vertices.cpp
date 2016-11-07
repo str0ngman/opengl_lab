@@ -18,38 +18,45 @@ GLfloat basic_triangle[] = {
 GLfloat vertices[] =
 		{ -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f, };
 
-GLfloat axis[] = {
-		0.0f, 0.0f, 0.0f,      1.0f,0.0f,0.0f,//1
-		1.0f, 0.0f, 0.0f,      1.0f,0.0f,0.0f,//2
+GLfloat axis[] = { 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,   //1
+		1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,   //2
 
-		0.0f, 0.0f, 0.0f,      0.0f,1.0f,0.0f,//3
-		0.0f, 1.0f, 0.0f,      0.0f,1.0f,0.0f,//4
+		0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,   //3
+		0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,   //4
 
-		0.0f, 0.0f, 0.0f,      0.0f,0.0f,1.0f,//5
-		0.0f, 0.0f, 1.0f,      0.0f,0.0f,1.0f,//6
+		0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,   //5
+		0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,   //6
 		};
 
 GLfloat test_line2[20];
 
-GLfloat test_cube[] = {
-         0.5f,  0.5f, 0.0f,  // Top Right
-         0.5f, -0.5f, 0.0f,  // Bottom Right
-        -0.5f, -0.5f, 0.0f,  // Bottom Left
-        -0.5f,  0.5f, 0.0f   // Top Left
-    };
+GLfloat test_cube[] = { 0.5f, 0.5f, 0.0f,  // Top Right
+		0.5f, -0.5f, 0.0f,  // Bottom Right
+		-0.5f, -0.5f, 0.0f,  // Bottom Left
+		-0.5f, 0.5f, 0.0f   // Top Left
+		};
 
 GLfloat cube_face[] = {
-        // Positions          // Colors           // Texture Coords
-         1.0f,  1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // Top Right
-         1.0f,  0.0f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // Bottom Right
-         0.0f,  1.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // Bottom Left
-         0.5f,  0.0f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // Top Left
-    };
+// Positions          // Colors           // Texture Coords
+		1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // Top Right
+		1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // Bottom Right
+		0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom Left
+		0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // Top Left
+		};
 
-    GLuint test_cube_indices[] = {  // Note that we start from 0!
-        0, 1, 3,  // First Triangle
-        1, 2, 3   // Second Triangle
-    };
+GLuint test_cube_indices[] = {  // Note that we start from 0!
+		0, 1, 3,  // First Triangle
+				1, 2, 3   // Second Triangle
+		};
+
+GLfloat coord_cube[] = {
+		//positions //texture coords
+		0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+		0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+		-0.5f,-0.5f, 0.0f, 0.0f, 0.0f,
+		-0.5f, 0.5f, 0.0f, 0.0f, 1.0f };
+
+GLuint coord_cube_indices[] = {0,1,3,1,2,3 };
 
 void set_array() {
 
