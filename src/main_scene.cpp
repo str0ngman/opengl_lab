@@ -41,6 +41,8 @@ extern GLfloat test_cube_indices[6];
 extern GLfloat cube_face[32];
 extern GLfloat coord_cube[20];
 extern GLfloat coord_cube_indices[6];
+extern glm::vec3 coord_cubePositions[10];
+extern GLfloat coord_multiple_cubes[180];
 int main(int argc, char* argv[]){
  // set_array();
  // int i = 0;
@@ -289,12 +291,26 @@ int main(int argc, char* argv[]){
     GLint viewLoc = glGetUniformLocation(CoordSystem_shader.Program,"view");
     GLint projLoc = glGetUniformLocation(CoordSystem_shader.Program,"projection");
 
+
     glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cordSys_model));
     glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(cordSys_view));
     glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(cordSys_projection));
 
 
     glBindVertexArray(vao_coord);
+
+  //2.8 final: render 10 3d cubes in the scene using for loop
+  /*  for (GLuint i = 0; i < 10; i++)
+          {
+              // Calculate the model matrix for each object and pass it to shader before drawing
+              glm::mat4 model;
+              model = glm::translate(model, coord_cubePositions[i]);
+              GLfloat angle = 20.0f * i;
+              model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+              glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+              glDrawArrays(GL_TRIANGLES, 0, 36);
+          }*/
     glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 //draw 2.8 end
