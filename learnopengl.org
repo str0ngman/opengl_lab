@@ -1,0 +1,671 @@
+* TITLE: learnopengl.com
+  Create Date: 2016_9_20
+  Desc: refracture the knowledge points, lab notes and apis
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+|  No | Title       | Stats    | Scene           | Concepts              | Q       | A |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 1.1 | IntrO       | Done     | /               | history               | /       | / |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 2.1 | OpenGL      | Done     | /               | is an api             | /       | / |   |
+|     |             |          |                 | Core-profile          |         |   |   |
+|     |             |          |                 | extensions            |         |   |   |
+|     |             |          |                 | state mahcine         |         |   |   |
+|     |             |          |                 | objects               |         |   |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 2.2 | Creat wnd   | Done     | /               | Libraries(GLFW, GLEW) | /       | / |   |
+|     |             |          |                 | Building Process      |         |   |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 2.3 | Hello Wnd   | DOne     | hello_window    | glfw, glew init       | /       | / |   |
+|     |             |          |                 | RENDER loop           |         |   |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 2.4 | Hello Trg   | Done     | hello_triangle  | vertex buffer object  | /       | / |   |
+|     |             |          |                 | vertex array object   |         |   |   |
+|     |             |          |                 | element buffer object |         |   |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 2.5 | Shaders     | Done     | tri_with_shader |                       | uniform | / | / |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 2.6 | Textures    | Done     |                 |                       |         |   |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 2.8 | Coordinates | On going |                 |                       |         |   |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 2.9 | Camera      | On going |                 |                       |         |   |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 3.1 | Colors      | Todo     | Basic_color     |                       | /       | / |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+|     |             |          |                 |                       |         |   |   |
+
+* DONE 1.1 INTRODUCTION 
+** WELCOME TO OPENGL
+** SO WHY READ THESE TUTORIALS?
+** WHAT WILL YOU LEARN?
+
+. LEARNING AND USING MORDERN OPENGL
+  -- GRAPHICS PROGRAMMING KNOWLEDGE
+  -- OPENGL OPERATING MECHANISM
+
+* TODO 1.2 OPENGL INSTALLATION GUIDE.
+** GLFW
+** GLEW
+** SOIL
+** GLM
+** ASSIMP
+
+* DONE 2.1 OPENGL
+** OPENGL IS CONSIDERED TO BE AN API
+  -- HOWEVER OPENGL IS NOT AN API BUT 
+     A SPECIFICATION, DEVELOPED AND MAINTAINED BY THE KHRONOS GROUP.
+  -- THE OPENGL SPEICIFICATION SPECIFIES THE RESULT/OUTPUT OF EACH FUNCTION
+
+** CORE-PROFILE VS IMMEDIATE MODE
+
+** EXTENSIONS
+
+** STATE MACHINE
+
+** OBJECTS
+  -- AN OBJECT IN OPENGL IS A COLLECTION OF OPTIONS 
+     THAT REPRESENTS A SUBSET OF OPENGL'S STATE.
+#+BEGIN_SRC 
+STRUCT OBJECT_NAME{
+    GLFLOAT OPTION1;
+    GLUINT OPTION2;
+    GLCHAR[] NAME;
+};
+#+END_SRC
+. PRIMITIVE TYPES
+ 
+* DONE 2.2 CREATING A WINDOW
+** GLFW
+ GLFW IS A LIBRARY
+*** BUILDING GLFW
+
+** OUR FIRST PROJECT
+. LINKING 
+
+** GLEW
+. BUILDING AND LINKING GLEW
+ 
+** ADDITIONAL RESOURCES
+. BUILDING APPLICATIONS: PROVIDE GREAT INFO ABOUT THE COMPILATION/LINKING
+PROCESS OF YOUR APPLICATION AND A LARGE LIST OF POSSIBLE ERRORS
+
+. GLFW WITH CODE::BLOCKS
+. RUNNING CMAKE
+. WRITING A BUILD SYSTEM UNDER LINUX
+
+* DONE 2.3 HELLO WINDOW
+** HELLO WND GETTING STARTED.
+*** API-TABLE 2.3
+|------+--------------------------+---|
+| GLFW | GLFWMAKECONTEXTCURRENT   |   |
+|      | GLFWWINDOWHINT           |   |
+|      | GLFWGETFRAMEBFFERSIZE    |   |
+|      | GLFWWINDOWSHOULDCLOSE    |   |
+|      | GLFWPOLLEVENTS           |   |
+|      | GLFWSWAPBUFFERS          |   |
+|      | GLFWSETWINDOWSHOULDCLOSE |   |
+|      | GLFWSETKEYCALLBACK       |   |
+|------+--------------------------+---|
+| GLEW | GLEWEXPERIMENTAL         |   |
+|      | GLEWINIT                 |   |
+|------+--------------------------+---|
+| GL   | GLVIEWPORT               |   |
+|      | GLCLEARCOLOR             |   |
+|      | GLCLEAR                  |   |
+|------+--------------------------+---|
+
+*** GLFW INIT 
+#+BEGIN_SRC C++
+ GLFWINIT();
+ GLFWWINDOWHINT(GLFW_CONTEXT_VERSION_MAJOR,3);
+ GLFWWINDOWHINT(GLFW_CONTEXT_VERSION_MINOR,3);
+ GLFWWINDOWHINT(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+ GLFWWINDOW* WINDOW = GLFWCEATEWINDOW(...);
+ GLFWMAKECONTEXTCURRENT(WINDOW);
+#+END_SRC
+*** GLEW INIT
+#+BEGIN_SRC C++
+GLEWEXPERIMENTAL = GL_TRUE;
+GLEWINIT();
+#+END_SRC
+*** VIEWPORT 
+#+BEGIN_SRC C++
+INT WIDTH, HEIGHT;
+GLFWGETFRAMEBUFFERSIZE(WINDOW, &WIDTH, &HEIGHT);
+GLVIEWPORT(0,0,WIDTH, HEIGHT);
+#+END_SRC
+    
+*** GAME LOOP
+#+BEGIN_SRC C++ 
+WHILE(!GLFWWINDOWSHOULDCLOSE(WINDOW)){
+GLFWPOLLEVENTS();
+GLFWSWAPBUFFERS(WINDOW);
+}
+
+#+END_SRC
+*** INPUT 
+#+BEGIN_SRC C++
+VOID KEY_CALLBACK(GLFWWINDOW* INT KEY, INT SCANCODE, INT ACTION, INT MODE){
+IF(KEY==GLFW_KEY_ESCAPE&&ACTION == GLFW_PRESS)
+GLFWSWETWINDOWSHOULDCLOSE(WINDOW, GL_TRUE);}
+#+END_SRC
+
+REGISTER THE FUNCTION WITH THE PROPER CALLBACK VIA GLFW.
+#+BEGIN_SRC C++
+GLFWSETKEYCALLBACK(WINDOW, KEY_CALLBACK);
+#+END_SRC
+
+*** RENDERING
+#+BEGIN_SRC C++
+WHILE(!GLFWWINDOWSHOULDCLOSE(WINDOW)
+{
+//CHECK AND CALL EVENTS
+   GLFWPOLLEVENTS();
+//RENDEREING COMANDS HERE
+   GLCLEARCOLOR(...) // SET THE COLOR FOR SCREEN CLEARING
+   GLCLEAR(GL_COLOR_BUFFER_BIT);//CLEAR SCREEN
+
+}
+#+END_SRC
+    
+* DONE 2.4 HELLO TRIANGLE
+|-----------+---------------------------+---|
+| TABLE 2.4 | CORE FUNCTIONS            |   |
+|-----------+---------------------------+---|
+| GLEW      | GLVERTEXATTRIBPOINTER     |   |
+|           | GLENABLEVERTEXATTRIBARRAY |   |
+|           | GLGENVERTEXARRAY          |   |
+|           | GLBINDVERTEXARRAY         |   |
+|-----------+---------------------------+---|
+** PIPE LINE
+ 
+ [VERTEX-SHADER] ----> SHADPE ASSEMBLY ------>[GEOMETRY SHADER]
+                                                    |
+                                                    \/ 
+ TEST AND BLENDING <---- [FRAGMENT SHADER] <-----RASTERIZATION                  
+
+- 2D COORDINATE VS A PIXEL
+  2D COORDINATE IS A VERY PRECISE REPRESENTATION OF WHERE A POINT IS IN 2D SPACE
+  2D PIXEL IS AN APPROXIMATION OF THAT POINT LIMITED BY THE RESOLUTION.
+
+** VERTEX INPUT
+
+  GLFLOAT VERTICES[] = { -0.5F, -0.5F, 0.0F, 
+                          0.5F, -0.5F, 0.0F,
+                          0.0F,  0.5F, 0.0F };
+
+- NORMALIZED DEVICE COORDINATES(NDC)
+  IT IS SMALL SPACE WHERE THE X, Y AND Z VALUES VARY FROM -1.0 TO 1.0
+  ANY COORDINATES THAT FALL OUTSIDE THIS RANGE WILL DISCARDED/CLIPPED AND 
+  WON'T BE VISIBLE ON SCREEN.
+
+- NDC COORDINATES WILL BE TRANSFORMED TO SCREEN-SPACE COORDINATES
+  VIA THE [VIEWPORT TRANSFORM] USING THE DATA PROVIDED WITH GLVIEWPORT.
+  THE [RESULTING] SCREEN-SPACE COORDINATES ARE THEN TRANSFORMED TO FRAGMENTS
+  AS INPUTS TO [FRAGMENT SHADER]
+
+*** VBO : A OPENGL OBJECT , TYPE IS GL_ARRAY_BUFFER
+  VERTEX BUFFER OBJECT: CAN STORE A LARGE NUMBER OF VERTICES IN THE GPU'S MEMORY.
+ADVANTAGE:
+  SEND LARGE BATCHES OF DATA ALL AT ONCE. SAVE TIME, FAST.
+  
+#+BEGIN_SRC C++ 
+GLUINT VBO;
+GLGENBUFFERS(1,&VBO);
+#+END_SRC
+  
+*** GLBINDBUFFER: BIND BUFFER TO THE GL_ARRAY_BUFFER TARGET.
+GLBINDBUFFER(GL_ARRAY_BUFFER,     VBO); 
+              TYPE OF THE BUFFER   BUFFER ID
+
+*** GLBUFFERDATA: COPY USER-DEFINED DATA INTO CURRENTLY BOUND BUFFER.
+GLBUFFERDATA(GL_ARRAY_BUFFER,
+      SIZEOF(VERTICES), VERTICES, GL_STATIC_DRAW);
+
+** VERTEX SHADER
+OPENGL REQUIRES THE PROGRAM AT LEAST SET UP A VERTEX AND FRAGMENT SHADER.
+
+#+BEGIN_SRC C  // A GLSL CODE
+#VERSION 330 CORE
+LAYOUT(LOCATION = 0) IN VEC3 POSITION;
+VOID MAIN()
+{
+GL_POSITION = VEC4(POSITION.X, POSITION.Y, POSITION.Z,1.0);
+}
+#+END_SRC
+ 
+*** COMPILING A SHADER
+#+BEGIN_SRC C++
+GLUINT VERTEXSHADER;
+VERTEXSHADER = GLCREATESHADER(GL_VERTEX_SHADER);
+GLSHADERSOURCE(VERTEXSHADER, 1, &VERTEXSHADERSOURCE, NULL);
+GLCOMPILESHADER(VERTEXSHADER);
+GLINT SUCCESS;
+GLCHAR INFOLOG[512];
+GLGETSHADERIV(VERTEXSHADER, GL_COMPILE_STATUS,&SUCCESS);
+IF(!SUCCESS){
+GLGETSHADERINFOLOG(VERTEXSHADER, 512, NULL, INFOLOG);
+COUT<<"ERROR::SHADER::VERTEX::COMPLATION_FAILED\N"<<INFOLOG<<ENDL;
+}
+
+#+END_SRC
+
+** FRAGMENT SHADER
+#+BEGIN_SRC C
+#VERSION 330 CORE
+OUT VEC4 COLOR;
+VOID MAIN(){
+COLOR = VEC4(1.0F, 0.5F, 0.2F, 1.0F);
+}
+#+END_SRC
+
+** SHADER PROGRAM
+A SHADER PROGRAM OBJECT IS
+ THE FINAL LINKED VERSION OF MULTIPLE SHADERS COMBINED.
+#+BEGIN_SRC C++
+GLUINT SHADERPROGRAM;
+SHADERPROGRAM = GLCREATEPROGRAM();
+GLATTACHSHADER(SHADERPROGRAM, VERTEXSHADER);
+GLATTACHSHADER(SHADERPROGRAM, FRAGMENTSHADER);
+GLLINKPROGRAM(SHADERPROGRAM);
+GLGETPROGRAMIV(SHADERPROGRAM, GL_LINK_STATUS,&SUCCESS);
+IF(!SUCCESS){
+GLGETPROGRAMINFOLOG(SHADERPROGRAM, 512, NULL, INFOLOG);
+}
+GLUSEPROGRAM(SHADERPROGRAM);
+GLDELETESHADER(VERTEXSHADER);
+GLDELETESHADER(FRAGMENTSHADER);
+
+#+END_SRC
+
+
+** LINKING VERTEX ATTRIBUTES
+*** GLVETEXATTRIBPOINTER: USING PROCESS
+#+BEGIN_SRC C++ 
+GLBINDBUFFER(GL_ARRAY_BUFFER, VBO);
+GLBUFFERDATA(GL_ARRAY_BUFFER,SIZEOF(VERTICES), VERTICES,GL_STATIC_DRAW);
+GLVERTEXATTRIBPOINTER(0, 3, GL_FLOAT, GL_FALSE,
+                      3*SIZEOF(GLFLOAT), (GLVOID*)0);
+GLENABLEVERTEXATTRIBARRAY(0);
+GLUSEPROGRAM(SHADERPROGRAM)
+SOMEOPENGLFUNCTIONTHATDRAWSOURTRIANGLE();
+#+END_SRC
+** [IMPORTANT] VERTEX ARRAY OBJECT
+WHAT IS A VAO
+A VAO CAN BE BOUND JUST LIKE A VERTEX OBJECT AND
+  ANY SUBSEQUENT VERTEX ATTRIBUTE CALLS FROM THAT POINT ON 
+  WILL BE STORED INSIDE THE VAO.
+
+*** USAGE OF VAO
+WE CAN JUST BIND THE CORRESPOINDING VAO. THIS MEANS SWITCHING BETWEEN 
+DIFFERENT VERTEX DATA AND ATTRIBUTE CONFIGURATIONS AS EASY AS BIND A 
+DIFFERENT VAO.  
+ALL THE STATE WE JUST SET IS STORED INSIDE THE VAO.
+ 
+- CORE OPENGL REQUIRES USE A VAO AT LEAST.
+  IF NOT OPENGL WILL REFUSE TO DRAW ANYTHING.
+
+*** THE PROCESS OF USING VAO
+1. BIND VERTEX ARRAY OBJECT
+2. COPY VERTEICES ARRAY IN A BUFFER FOR OPENGL TO USE
+3. SET VERTEX ATTRIBUTES POINTERS.
+4. UNBIND THE VAO.
+5. DRAW THE OBJECT.
+
+#+BEGIN_SRC C++ 
+//1.
+GLBINDVERTEXARRAY(VAO); 
+
+//2.
+GLBINDBUFFER(GL_ARRAY_BUFFER, VBO); 
+
+GLBUFFERDATA(GL_ARRAY_BUFFER, SIZEOF(VERTICES), VERTICES, GL_STATIC_DRAW);
+
+//3. 
+GLVERTEXATTRIBPOINTER(0,3,GL_FLOAT,GL_FALSE, 
+                      3*SIZEOF(GLFLOAT), (GLVOID*)0);
+GLENABLEVERTEXATTRIBARRAY(0);
+
+//4. UNBIND THE VAO.
+GLBINDVERTEXARRAY(0).
+
+//5. DRAW THE OBJECT
+GLUSEPROGRAM(SHADERPROGRAM);
+GLBINDVERTEXARRAY(VAO);
+...SOME DRAWING FUNCTIONS FOR THE TRIANGLE();
+GLBINDVERTEXARRAY(0);
+
+#+END_SRC
+
+[NOTE] IT IS COMMON PRACTICE TO UNBIND OPENGL OBJECTS WHEN 
+       WE'RE DONE CONFIGURING, SO WE DONT'T MISTAKENDLY MISCONFIGURE
+       THEM ELSEWHERE.
+*** DRAW THE TRIANGLE
+#+BEGIN_SRC C++
+GLUSEPROGRAM(SHADERPROGRAM);
+GLBINDVERTEXARRAY(VAO);
+GLDRAWARRAYS(GL_TRIANGLES,0,3);
+GLBINDVERTEXARRAY(0);
+#+END_SRC
+    
+** ELEMENT BUFFER OBJECTS
+
+* TODO [#A] 2.5 SHADERS
+
+** TABLE 2.5 SHADERS
+|------------------+----------------------|
+| CORE CONCEPT     | RELATED API          |
+|------------------+----------------------|
+| SHADER STRUCTURE | GLGETATTRIBLOCATION  |
+| UNIFORM VARIABLE | GLGETUNIFORMLOCATION |
+| MY_SHADER CLASS  | C++: FILE/STRING I/O |
+|------------------+----------------------|
+SHADERS:
+    ARE LITTLE PROGRAMS(SIZE) THAT REST ON THE GPU.(LOCATION)
+(USAGE) THESE PROGRAMS RUN FOR EACH SPECIFIC SECTION OF THE GRAPHICS PIPELINE.
+(RESTRICTION) THEY ARE NOT ALLOWD TO COMMUNICATE WITH EACH OTHER. 
+              ONLY COMMUNICATION : IS VIA THEIR INPUTS AND OUTPUTS.
+
+** GLSL
+  GLSL IS TARGETED SPECIFICALLY AT VECTOR AND MATRIX MANIPULATION.
+
+** TYPEICAL STRUCTURE
+
+#VERSION VERSION_NUMBER
+IN TYPE IN_VAR_NAME;//(SPECIFICALLY IN V.S) INPUT IS VERTEX ATTRIB
+IN TYPE IN_VAR_NAME;// NUMBER OF VERTEX ATTRIBUTE IS LIMITED BY THE HARDWARE
+
+OUT TYPE OUT_VAR_NAME;
+UNIFORM TYPE UNIFORM_NAME;
+
+VOID MAIN()
+{
+  //PROCESS INPUTS AND DO SOME OTHER STUFF
+  ...
+  OUT_VAR_NAME = SOME_OPERATION;
+}
+
+** TYPES
+*** VECTORS
+*** INS AND OUTS
+
+** UNIFORMS
+ UNIFORMS ARE GLOBAL
+ \_ MEANING THAT A UNIFORM VAR IS UNIQUE PRE SHADER PROGRAM OBJECT.
+ 
+ KEEP VALUE
+ \_ MEANING THAT THE UNIFORM KEEP THEIR VALUES 
+    UNTIL THEY'ER EITHER RESET OR UPDATED.
+
+*** DECLARE A UNIFORM
+#+BEGIN_SRC C++
+//SAMPLE
+#VERSION 330 CORE         // WE DECLARE A UNIFORM VEC4 OURCOLOR TO THE 
+OUT VEC4 COLOR;           // THE CONTENT OF THIS UNIFORM VALUE.
+UNIFORM VEC4 OURCOLOR;    // WE CAN DEFINE THEM IN ANY SHADER WE'D LIKE
+VOID MAIN()               // SO NO NEED TO GO THROUGH THE V.S AGAIN TO 
+{                         // GET SOMETHING TO THE FRAGMENT SHADER.
+ COLOR = OURCOLOR;        // NO NEED TO DEFINE THE UNIFORM VAR.
+}
+#+END_SRC
+    
+* TODO [#A] 2.6 TEXTURES
+  
+** TEXTURE CODE ANALYSIS
+   MAIN.CPP :
+   - IOSTREAM - IOSTREAM 
+                GLEW.H
+                GLFW3.H
+                SOIL.H
+                SHADER.H
+   - GLOBAL VARIABLE : WIDTH, HEIGHT
+     GLOBAL FUNCTION, KEY_CALLBACKS, MOUSE_CALLBACKS
+   
+   .MAIN FUNCTION
+     - _PREPAREATION_ - GLFW RELATED - GLFWINIT
+                                   OPTIONS: GLFWWINDOWHINT
+                                   WINDOW OBJECT.
+                                   KEYCALLBACK : GLFWSETKEYCALLBACK(...);
+                  - GLEW RELATED - GLEWEXPERIMENTAL.
+                                   GLEWINIT
+                  - GLVIEWPORT(0, 0, WIDTH, HEIGHT); 
+                    WINDOW CONFIGURATION
+     
+      - _SHADER LOADING PREPARATION_
+         SHADER OURSHADER("TEXTURE.VERT","TEXTURE.FRAG");
+      
+      - _FILLING BUFFERS_
+        1. VERTEX PREPARATION 
+          GLFLOAT VERTICES[] = {|POS|COLOR|TEXCOORD|}
+           GLUINT INDICES[] = {0,1,3,
+                              1,2,3}
+        2. DECLARE VARIABLE FOR VBO, VAO AND EBO
+          GLGENVERTEXARRAY(1, &VAO);
+          GLGENBUFFERS(1, &VBO);
+          GLGENBUFFER(1, &EBO);
+        3. SET VERTEX BUFFER OBEJECT DATA,ATTACH VBO TO VAO
+          GLBINDVERTEXARRAY(VAO);
+          GLBINDBUFFER(GL_ARRAY_BUFFER, VBO); //ATTACH VBO TO VAO
+          GLBUFFERDATA(GL_ARRAY_BUFFER,
+                       SIZEOF(VERTICES), VERTICES, GL_STATIC_DRAW);
+	4. SET EBO DATA
+           GLBINDBUFFER(GL_ELEMENT_ARRAY_BUFFER, EBO);
+           GLBUFFERDATA(GL_ELEMENT_ARRAY_BUFFER,
+                        SIZEOF(INDICES),INDICES,GL_STATIC_DRAW);
+        5. POSITION ATTRIBUTE
+           GLVERTEXATTRIBPOINTER(0, 3, GL_FLOAT, GL_FALSE, 8*SIZEOF(GLFLOAT), (GLVOID*)0);
+           GLENABLEVERTEXATTRIBARRAY(0);
+        6. COLOR ATTRIBUTE
+           GLVERTEXATTRIBPOINTER(1,3,GL_FLOAT,GL_FALSE, 8*SIZEOF(GLFLOAT),(GLVOID*)0);
+           GLENABLEVERTEXATTRIBARRAY(1);
+        7. TEXCOORD ATTIRBUTE
+           GLVERTEXATTRIBPOINTER(2, 2, GL_FLOAT, GL_FALSE, 8*SIZEOF(GLFLOAT),(GLVOID*)0);
+           GLENABLEVERTEXATTRIBARRAY(2);
+        8. UNBIND VAO
+           GLBINDVERTEXARRAY(0);      
+      - _LOAD AND CREATE TEXTURE_
+        - TEXTURE1:
+           GLGENTEXTURES(1,&TEXTURE1);
+           GLBINDTEXTURE(GL_TEXTURE_2D, TEXTURE1);
+            
+           //SET TEXTURE PARAMETERS;
+           GLTEXPARAMETERI(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,GL_REPEAT);
+           ..             (..,            GL_TEXTURE_WRAP_T, ..      );
+           
+           //SET TEXTURE FILTERING
+           GLTEXPARAMETERI(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+           ..             (..           , ..        _MAX..     ,..       );
+           
+           //LOAD AND CREATE TEXTURE AND GENERATE MIPMAPS
+           INT WIDTH, HEIGHT;
+           UNSIGNED CHAR* IMAGE = SOIL_LOAD_IMAGE("WALL.JPG", &WDITH, &HEIGHT, 0, SOIL_LOAD_RGB);
+           GLTEXIMAGE2D(GL_TEXTURE_2D, 0, GL_RGB, WIDTH, HEIGHT, 0, GL_RGB, 
+                        GL_UNSIGNED_BYTE, IMAGE);
+           GLGENERATEMIPMAP(GL_TEXTURE_2D);
+           SOIL_FREE_IMAGE_DATA(IMAGE);
+           GLBINDTEXTURE(GL_TEXTURE_2D,0);
+
+        - TEXTURE2: ...
+        
+      - _WHILE LOOP_ :  WHILE (!GLFWWINDOWSHOULDCLOSE(WINDOW))
+      {
+       GLFWPOLLEVENTES()
+       
+       GLCLEARCOLOR();
+       GLCLEAR(GL_COLOR_BUFFER_BIT);
+       
+       //LAUNCH SHADER
+       OURSHADER.USEPROGRAM();
+       
+       1ST TEXTURE
+       //BIND TEXTURE()
+       GLACTIVETEXTURE(GL_TEXTURE0);
+       GLBINDTEXTURE(GL_TEXTURE_2D,TEXTURE1);
+       GLUNIFORM1I(GLGETUNIFORMLOCATION(OURSHADER.PROGRAM,"OURTEXTURE1"),0);
+       
+       2ND TEXTURE
+       //...
+       
+       _DRAW_
+       GLBINDVERTEXARRAY(VAO);
+       GLDRAWELEMENTS(GL_TRIANGLES,6, GL_UNSIGNED_INT, 6);
+       GLBINDVERTEXARRAY(0);
+       GLFWSWAPBUFFERS(WINDOW);
+      }
+      GLFWTERMINATE();
+      RETURN0;
+     
+     
+       
+           
+* 2.8 Coordinate System
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 2.8 | Coordinates | On going |                 |                       |         |   |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+** Going 3D
+To start drawing in 3D, first create a model matrix. 
+***  model matrix 
+    consits of translations, scaling and/or rotations. 
+    apply to transform all objects's vertices to the global world space.
+
+    glm::mat4 model; 
+    model = glm::rotate(model, -55.0f, glm::vec3(1.0f,0.0f,0.0f);
+    
+    _vertex_ * [model] => _world_
+***  view matrix 
+    we move the entire scene forward, that is exaclty what a view matrix does.
+    is the reverse way of moving the camera.
+   
+    camera Moving backwards,is equal to the whole scene moving negative direction along z axis .
+   (direction is +z,since Opengl is a right hand system)
+    
+    glm::mat4 view;
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f);
+*** projection matrix
+  _a perspective projection_:
+   glm::mat4 projection;
+   projection = glm::perspective(45.0f,screenWidth/screenHeight, 0.1f, 100.0f);
+
+*** transform matrices: pass matrices to shaders
+    first declare the transormation matrices as uniforms in the vertex shader 
+        and multiply them with the vertex coordinates.
+--------------------------------------------------    
+#version 330 core
+layout(location = 0) in vec3 position;
+...
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+void main(){
+gl_Position = projection*view*model*vec4(position,1.0f);
+...
+}
+  
+-------------------------------------------------
+We should also send the matrices to the shader
+(this is usually done each redner iteration since transormation matrices tend to change a lot)
+
+
+GLint modelLoc = glGetUniformLocation(ourShader.Program, "model"));
+glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+//same for view matrix and projection matrix;
+*** full sourcecode
+   
+*** more 3d: Z-Buffer(depth buffer)
+  .GLFW automatically creates a Z buffer
+  .the depth is stored automatically in the fragment(as the _fragment's z value_)
+  .OpenGL compares its depth values with the z-buffer and if the current fragment 
+   is behind the other fragment it is dicarded, otherwise written. 
+  .This process is called _Depth testing_ and is done _automatically_ by OpenGL.  
+  .glEnable(GL_DEPTH_TEST);
+*** more 3d: more entities
+   the only thing we need to change when rendering more objects is its 
+   model matrix 
+              where we transform the cubes into the world.
+  
+  
+
+
+
+
+    
+ 
+
+
+
+   
+  
+* 2.9 Camera
+** Introduction
+   Camera simulation, FPS-style-camera. keyboard mouse input.
+   
+*** Camera/ View space
+   1. Camera Position
+
+* TODO 3.1 Colors
+** Introduction
+   this chapter. we will discuss what colors are
+   and start building the scene for the upcoming light tutorials.
+   
+*** [Basic Representation]
+   glm::vec3 coral(1.0f, 0.5f, 0.3f);
+  
+*** [rules of reflection]
+   White sun light: is actually a collection of all the visible colors
+   Objects: absorbs a large portion of these colors.
+            It only reflects those colors that represent the object's color 
+            and the combination of those is what we perceive.
+   
+*** [calculation method]
+  vec3 lightcolor;(1.0,1.0,1.0)
+  vec3 toycolor;(1.0,0.5,0.31)
+  vec3 result= lightcolor * toycolor;(component-wise multiplication)
+       (1.0,0.5,0.31)
+
+*** [conclustion] 
+  we can get unexpected colors from objects by using different light colors.
+  
+
+** A lighting Scene
+*** Scene code: a box and a light source
+
+[a vertex shader to draw the container]
+#+BEGIN_SRC c
+#version 330 core
+layout (location = 0) in vec3 position;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+void main(){
+gl_Position = projection*view*model*vec4(position,1.0f);
+}
+#+END_SRC
+
+[Create a simple VAO specifically for the lamp]
+#+BEGIN_SRC c
+GLuint lightVAO;
+glGenVertexArrays(1,&lightVAO);
+glBindVertexArray(lightVAO);
+glBindBuffer(GL_ARRAY_BUFFER,VBO);
+glVertexAttribPointer(0,3,GL_FLOAT,3*sizeof(GLFLOAT),(GLvoid*)0);
+glEnableVertexAttribAray(0);
+glBindVertexArray(0);
+#+END_SRC
+
+[fragment shader]
+#+BEGIN_SRC c
+#version 330 core
+out vec4 color;
+uinform vec3 objectColor;
+uniform vec3 lightColor;
+
+void main()
+{
+color = vec4( lightColor * objectColr, 1.0f);
+}
+
+#+END_SRC
+ 
