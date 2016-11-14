@@ -1,7 +1,3 @@
-/* filename: main_scene.cpp
-   desc: [todo] init glfw, glew, print log on screen(including opengl
-	 version, glfw and glew output).
- */
 
 //c++ standard library
 #include<iostream>
@@ -32,316 +28,203 @@
 #include "vertices.h"
 
 
-//void key_callback(GLFWwindow*, int, int, int, int);
+// Function prototypes
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
+
+// Window dimensions
 const GLuint WIDTH = 800, HEIGHT = 600;
-extern GLfloat test_line2[30];
-extern GLfloat axis[60];
-extern GLfloat test_cube[12];
-extern GLfloat test_cube_indices[6];
-extern GLfloat cube_face[32];
-extern GLfloat coord_cube[20];
-extern GLfloat coord_cube_indices[6];
-extern glm::vec3 coord_cubePositions[10];
-extern GLfloat coord_multiple_cubes[180];
-extern GLfloat camera_cube_36faces[180];
-
-int main(int argc, char* argv[]){
- // set_array();
- // int i = 0;
- // while( i<20)
- // {
- //	  std::cout<<test_line2[i]<<std::endl;
- //	  i++;
- //  }
-
-	std::cout<<"starting GLFW context, openGL3.3"<<std::endl;
-  glfwInit();
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
-  glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_RESIZABLE,GL_FALSE);
-
-  GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "init oepngl window", NULL, NULL);
-
-  glfwMakeContextCurrent(window);
-
-  glfwSetKeyCallback(window, key_callback);
-
-  glewExperimental = GL_TRUE;
-
-  glewInit();
-  std::cout<<glGetError()<<std::endl;
-  int width, height;
-  glfwGetFramebufferSize(window, &width, &height);
-  glViewport(0,0,width,height);
-
-  std::cout<<glGetError()<<std::endl;
-  std::cout<<"preparation finished."<<std::endl;
-
-  /*texture experiment*/
-
-  GLfloat v[] = {
-          // Positions          // Colors           // Texture Coords
-           1.0f,  1.0f, -0.1f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // Top Right
-           1.0f,  0.0f, -0.1f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // Bottom Right
-           0.0f,  1.0f, -0.1f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // Bottom Left
-           0.5f,  0.0f, -0.1f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // Top Left
-      };
-
-  GLuint i[] = {3,0,1,2,0,3};
-
-  lab_shader texture_shader("../shader/texture_vert.glsl","../shader/texture_frag.glsl");
-
-  /*----------------------------------
-   * axis vao vbo
-   * --------------------------------*/
-  GLuint VAO,VBO;
-  glGenVertexArrays(1, &VAO);
-  glGenBuffers(1, &VBO);
-
-  glBindVertexArray(VAO);
-
-  glBindBuffer(GL_ARRAY_BUFFER,VBO);//connect vbo to vao slot.
-  glBufferData(GL_ARRAY_BUFFER, sizeof(axis),axis, GL_STATIC_DRAW);//fill vao data
-
-  glVertexAttribPointer(0,3,GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), (GLvoid*)0);//let vao konw how to interpret
-  glEnableVertexAttribArray(0);//use vao slot 0.
-
-  glVertexAttribPointer(1,3,GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), (GLvoid*)(3* sizeof(GLfloat)));
-  glEnableVertexAttribArray(1);
-
-  glBindBuffer(GL_ARRAY_BUFFER,0);
-  glBindVertexArray(0);
-  /*----------------------------------
-   * basic shape vao vbo
-   * --------------------------------*/
-  GLuint cube_vao, cube_vbo, cube_ebo;
-  glGenVertexArrays(1, &cube_vao);
-  glGenBuffers(1, &cube_vbo);
-  glGenBuffers(1, &cube_ebo);
-
-  glBindVertexArray(cube_vao);
-  glBindBuffer(GL_ARRAY_BUFFER, cube_vbo);
-  glBufferData(GL_ARRAY_BUFFER,sizeof(test_cube),test_cube, GL_STATIC_DRAW);
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cube_ebo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(test_cube_indices), test_cube_indices, GL_STATIC_DRAW);
-
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER,0);
-  glBindVertexArray(0);
-
- /*----------------------------------
-  * transformed cube with color and texture
-  * --------------------------------*/
-  GLuint v_vbo, v_vao, v_ebo;
-  glGenVertexArrays(1,&v_vao);
-  glGenBuffers(1,&v_vbo);
-  glGenBuffers(1,&v_ebo);
-  glBindVertexArray(v_vao);
-  glBindBuffer(GL_ARRAY_BUFFER,v_vbo);
-  glBufferData(GL_ARRAY_BUFFER,sizeof(v),v,GL_STATIC_DRAW);
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,v_ebo);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(i),i,GL_STATIC_DRAW);
-
-  glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,8*sizeof(GLfloat),(GLvoid*)0);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,8*sizeof(GLfloat),(GLvoid*)(3*sizeof(GLfloat)));
-  glEnableVertexAttribArray(1);
-  glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,8*sizeof(GLfloat),(GLvoid*)(6*sizeof(GLfloat)));
-  glEnableVertexAttribArray(2);
-
-  glBindVertexArray(0);
-
-  GLuint texture;
-  glGenTextures(1,&texture);
-  glBindTexture(GL_TEXTURE_2D,texture);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-
-  int w, h;
-  unsigned char* image = SOIL_load_image("../res/jpg/wall.jpg",&w, &h,0,SOIL_LOAD_RGB);
-  glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,w,h,0,GL_RGB,GL_UNSIGNED_BYTE,image);
-  glGenerateMipmap(GL_TEXTURE_2D);
-  SOIL_free_image_data(image);
-  glBindTexture(GL_TEXTURE_2D,0);
-
-
-  /*----------------------------------
-   * 2.8 Coordinate system textured cube
-   * --------------------------------*/
-  GLuint vbo_coord, vao_coord, ebo_coord;
-  glGenVertexArrays(1, &vao_coord);
-  glGenBuffers(1, &vbo_coord);
-  glGenBuffers(1, &ebo_coord);
-
-  glBindVertexArray(vao_coord);
-  glBindBuffer(GL_ARRAY_BUFFER,vbo_coord);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(coord_cube), coord_cube, GL_STATIC_DRAW);
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ebo_coord);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(coord_cube_indices), coord_cube_indices, GL_STATIC_DRAW);
-
-  glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE, 5*sizeof(GLfloat),(GLvoid*)0);
-  glEnableVertexAttribArray(0);
-
-  glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE, 5*sizeof(GLfloat),(GLvoid*)(3*sizeof(GLfloat)));
-  glEnableVertexAttribArray(2);
-
-  glBindVertexArray(0);
-
-  //Texture
-  GLuint texture_coord;
-  glGenTextures(1,&texture_coord);
-  glBindTexture(GL_TEXTURE_2D, texture_coord);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
-
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-
-  int coord_width, coord_height;
-  unsigned char* coord_cube_image = SOIL_load_image("../res/jpg/wall.jpg",
-		  &coord_width,&coord_height,0, SOIL_LOAD_RGB);
-  glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,
-		  coord_width, coord_height,0,GL_RGB,GL_UNSIGNED_BYTE,coord_cube_image);
-  glGenerateMipmap(GL_TEXTURE_2D);
-  SOIL_free_image_data(coord_cube_image);
-  glBindTexture(GL_TEXTURE_2D, 0);
-
-
-
-  /*---------------------------------
-  test code should be set after
-  the render context  initialization stage
-  ---------------------------------*/
-
-  //labShaders
-  /*---------------------------------*/
-   lab_shader triangleShader("../shader/init_vert.glsl","../shader/init_frag.glsl");
-
-   lab_shader cube_shader("../shader/basic_cube_vert.glsl","../shader/basic_cube_frag.glsl");
-
-   lab_shader CoordSystem_shader("../shader/coordinateSystem_vert.glsl","../shader/coordinateSystem_frag.glsl");
-
-  /*----------------------------------
-   *while loop
-   * --------------------------------*/
-  std::cout<<"Entering while loop"<<std::endl;
-  //glLineWidth(4.0);
-  while(!glfwWindowShouldClose(window)){
-
-    glfwPollEvents();
-
-    glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-//draw axis
-   triangleShader.Use();
-   glBindVertexArray(VAO);
-    glDrawArrays(GL_LINES,0,6);
-    glBindVertexArray(0);
-
-    glDisableClientState(GL_VERTEX_ARRAY);
-
-//draw basic cube
-   cube_shader.Use();
-   glBindVertexArray(cube_vao);
-   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
-
-//draw transformed textured cube
-    glBindTexture(GL_TEXTURE_2D,texture);
-    texture_shader.Use();
-    glm::mat4 trans;
-    trans=glm::translate(trans,glm::vec3(0.1f,-0.1f,0.0f));
-    trans=glm::rotate(trans,(GLfloat)glfwGetTime()*50.0f,glm::vec3(0.5f,0.5f,0.0f));
-
-    GLuint transformLoc = glGetUniformLocation(texture_shader.Program,"transform");
-    glUniformMatrix4fv(transformLoc,1,GL_FALSE,glm::value_ptr(trans));
-    glBindVertexArray(v_vao);
-    glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT,0);
-    glBindVertexArray(0);
-
-//draw 2.8 coordinate system coord_cube
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture_coord);
-    glUniform1i(glGetUniformLocation(CoordSystem_shader.Program,"ourTexture1"),0);
-
-    CoordSystem_shader.Use();
-
-    glm::mat4 cordSys_model;
-    glm::mat4 cordSys_view;
-    glm::mat4 cordSys_projection;
-
-    cordSys_model = glm::rotate(cordSys_model,-55.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-    cordSys_view = glm::translate(cordSys_view,glm::vec3(0.0f, 0.0f, -3.0f));
-    cordSys_projection = glm::perspective(45.0f, (GLfloat)WIDTH/(GLfloat)HEIGHT,0.1f, 100.0f);
-
-    GLint modelLoc = glGetUniformLocation(CoordSystem_shader.Program,"model");
-    GLint viewLoc = glGetUniformLocation(CoordSystem_shader.Program,"view");
-    GLint projLoc = glGetUniformLocation(CoordSystem_shader.Program,"projection");
-
-
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(cordSys_model));
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(cordSys_view));
-    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(cordSys_projection));
-
-
-    glBindVertexArray(vao_coord);
-
-  //2.8 final: render 10 3d cubes in the scene using for  loop
-  /*  for (GLuint i = 0; i < 10; i++)
-          {
-              // Calculate the model matrix for each object and pass it to shader before drawing
-              glm::mat4 model;
-              model = glm::translate(model, coord_cubePositions[i]);
-              GLfloat angle = 20.0f * i;
-              model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
-              glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-              glDrawArrays(GL_TRIANGLES, 0, 36);
-          }*/
-    glDrawElements(GL_TRIANGLES,6,GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
-//draw 2.8 end
-    glfwSwapBuffers(window);
-  }
-
-  glDeleteVertexArrays(1, &VAO);
-  glDeleteBuffers(1, &VBO);
-
-  glDeleteVertexArrays(1, &cube_vao);
-  glDeleteBuffers(1, &cube_vbo);
-
-  glDeleteVertexArrays(1,&v_vao);
-  glDeleteBuffers(1,&v_vbo);
-  glDeleteBuffers(1,&v_ebo);
-
-  glfwTerminate();
-
-
-  return 0;
+
+// The MAIN function, from here we start the application and run the game loop
+int main()
+{
+    // Init GLFW
+    glfwInit();
+    // Set all the required options for GLFW
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
+    // Create a GLFWwindow object that we can use for GLFW's functions
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "LearnOpenGL", NULL, NULL);
+    glfwMakeContextCurrent(window);
+
+    // Set the required callback functions
+    glfwSetKeyCallback(window, key_callback);
+
+    // Set this to true so GLEW knows to use a modern approach to retrieving function pointers and extensions
+    glewExperimental = GL_TRUE;
+    // Initialize GLEW to setup the OpenGL Function pointers
+    glewInit();
+
+    // Define the viewport dimensions
+    glViewport(0, 0, WIDTH, HEIGHT);
+
+    glEnable(GL_DEPTH_TEST);
+
+
+    // Build and compile our shader program
+    lab_shader ourShader("../shader/camera_cube_01_vert.glsl","../shader/camera_cube_01_frag.glsl");
+
+    // Set up vertex data (and buffer(s)) and attribute pointers
+    GLfloat vertices[] = {
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    };
+    glm::vec3 cubePositions[] = {
+        glm::vec3( 0.0f,  0.0f,  0.0f),
+        glm::vec3( 2.0f,  5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f),
+        glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3( 2.4f, -0.4f, -3.5f),
+        glm::vec3(-1.7f,  3.0f, -7.5f),
+        glm::vec3( 1.3f, -2.0f, -2.5f),
+        glm::vec3( 1.5f,  2.0f, -2.5f),
+        glm::vec3( 1.5f,  0.2f, -1.5f),
+        glm::vec3(-1.3f,  1.0f, -1.5f)
+    };
+    GLuint VBO, VAO;
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    // Position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+    // TexCoord attribute
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+
+    glBindVertexArray(0); // Unbind VAO
+
+
+    // Load and create a texture
+    GLuint texture1;
+    GLuint texture2;
+    // ====================
+    // Texture 1
+    // ====================
+    glGenTextures(1, &texture1);
+    glBindTexture(GL_TEXTURE_2D, texture1); // All upcoming GL_TEXTURE_2D operations now have effect on our texture object
+    // Set our texture parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// Set texture wrapping to GL_REPEAT
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // Set texture filtering
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // Load, create texture and generate mipmaps
+    int width, height;
+    unsigned char* image = SOIL_load_image("../res/jpg/wall.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    SOIL_free_image_data(image);
+    glBindTexture(GL_TEXTURE_2D, 0); // Unbind texture when done, so we won't accidentily mess up our texture.
+
+
+    // Game loop
+    while (!glfwWindowShouldClose(window))
+    {
+        // Check if any events have been activiated (key pressed, mouse moved etc.) and call corresponding response functions
+        glfwPollEvents();
+
+        // Render
+        // Clear the colorbuffer
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+        // Bind Textures using texture units
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture1);
+        glUniform1i(glGetUniformLocation(ourShader.Program, "ourTexture1"), 0);
+
+
+        // Activate shader
+        ourShader.Use();
+
+        // Camera/View transformation
+        glm::mat4 view;
+        GLfloat radius = 10.0f;
+        GLfloat camX = sin(glfwGetTime()) * radius;
+        GLfloat camZ = cos(glfwGetTime()) * radius;
+        view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        // Projection
+        glm::mat4 projection;
+        projection = glm::perspective(45.0f, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
+        // Get the uniform locations
+        GLint modelLoc = glGetUniformLocation(ourShader.Program, "model");
+        GLint viewLoc = glGetUniformLocation(ourShader.Program, "view");
+        GLint projLoc = glGetUniformLocation(ourShader.Program, "projection");
+        // Pass the matrices to the shader
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+        glBindVertexArray(VAO);
+        for (GLuint i = 0; i < 10; i++)
+        {
+            // Calculate the model matrix for each object and pass it to shader before drawing
+            glm::mat4 model;
+            model = glm::translate(model, cubePositions[i]);
+            GLfloat angle = 20.0f * i;
+            model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+            glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+            glDrawArrays(GL_TRIANGLES, 0, 36);
+        }
+        glBindVertexArray(0);
+
+        // Swap the screen buffers
+        glfwSwapBuffers(window);
+    }
+    // Properly de-allocate all resources once they've outlived their purpose
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    // Terminate GLFW, clearing any resources allocated by GLFW.
+    glfwTerminate();
+    return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
