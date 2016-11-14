@@ -43,19 +43,18 @@ extern GLfloat coord_cube[20];
 extern GLfloat coord_cube_indices[6];
 extern glm::vec3 coord_cubePositions[10];
 extern GLfloat coord_multiple_cubes[180];
+extern GLfloat camera_cube_36faces[180];
+
 int main(int argc, char* argv[]){
  // set_array();
  // int i = 0;
  // while( i<20)
  // {
-//	  std::cout<<test_line2[i]<<std::endl;
-//	  i++;
-//  }
+ //	  std::cout<<test_line2[i]<<std::endl;
+ //	  i++;
+ //  }
 
-
-
-
-  std::cout<<"starting GLFW context, openGL3.3"<<std::endl;
+	std::cout<<"starting GLFW context, openGL3.3"<<std::endl;
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR,3);
@@ -78,9 +77,6 @@ int main(int argc, char* argv[]){
 
   std::cout<<glGetError()<<std::endl;
   std::cout<<"preparation finished."<<std::endl;
-
-
-
 
   /*texture experiment*/
 
