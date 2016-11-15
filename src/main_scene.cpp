@@ -66,6 +66,7 @@ int main()
     // Build and compile our shader program
     lab_shader ourShader("../shader/camera_cube_01_vert.glsl","../shader/camera_cube_01_frag.glsl");
 
+
     // Set up vertex data (and buffer(s)) and attribute pointers
     GLfloat vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -135,8 +136,8 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
     // TexCoord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(2);
 
     glBindVertexArray(0); // Unbind VAO
 
@@ -157,11 +158,28 @@ int main()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     // Load, create texture and generate mipmaps
     int width, height;
-    unsigned char* image = SOIL_load_image("../res/jpg/wall.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+    unsigned char* image = SOIL_load_image("../res/jpg/container.jpg", &width, &height, 0, SOIL_LOAD_RGB);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     glGenerateMipmap(GL_TEXTURE_2D);
     SOIL_free_image_data(image);
     glBindTexture(GL_TEXTURE_2D, 0); // Unbind texture when done, so we won't accidentily mess up our texture.
+    // ===================
+    // Texture 2
+    // ===================
+    glGenTextures(1, &texture2);
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    // Set our texture parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // Set texture filtering
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // Load, create texture and generate mipmaps
+    image = SOIL_load_image("../res/jpg/awesomeface.png", &width, &height, 0, SOIL_LOAD_RGB);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    SOIL_free_image_data(image);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
 
     // Game loop
@@ -180,7 +198,9 @@ int main()
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
         glUniform1i(glGetUniformLocation(ourShader.Program, "ourTexture1"), 0);
-
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, texture2);
+        glUniform1i(glGetUniformLocation(ourShader.Program, "ourTexture2"), 1);
 
         // Activate shader
         ourShader.Use();
@@ -226,5 +246,4 @@ int main()
     glfwTerminate();
     return 0;
 }
-
 
