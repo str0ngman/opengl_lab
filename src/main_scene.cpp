@@ -46,7 +46,7 @@ GLfloat lastY  =  HEIGHT / 2.0;
 bool    keys[1024];
 
 // Light attributes
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+glm::vec3 lampPos(1.2f, 1.0f, 2.0f);
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -155,9 +155,9 @@ int main()
     glBindVertexArray(0);
 
     // Then, we set the light's VAO (VBO stays the same. After all, the vertices are the same for the light object (also a 3D cube))
-    GLuint lightVAO;
-    glGenVertexArrays(1, &lightVAO);
-    glBindVertexArray(lightVAO);
+    GLuint lampVao;
+    glGenVertexArrays(1, &lampVao);
+    glBindVertexArray(lampVao);
     // We only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need.
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     // Set the vertex attributes (only position data for the lamp))
@@ -184,27 +184,30 @@ int main()
 
         // Use cooresponding shader when setting uniforms/drawing objects
         containerShader.Use();
-        GLint objectColorLoc = glGetUniformLocation(containerShader.Program, "objectColor");
-        GLint lightColorLoc  = glGetUniformLocation(containerShader.Program, "lightColor");
-        glUniform3f(objectColorLoc, 0.0f, 0.0f, 1.0f);
+        GLint objectColorLoc = glGetUniformLocation(containerShader.Program, "objectColor");//0.0,0.0,1.0
+        GLint lightColorLoc  = glGetUniformLocation(containerShader.Program, "lightColor");//1.0,0.5,1.0
+
+        glUniform3f(objectColorLoc, 0.0f, 0.0f, 1.0f);//set value for the objectColor
         glUniform3f(lightColorLoc,  1.0f, 0.5f, 1.0f);
 
+        //final color requires lightColor*objectColor, so it is 0, 0, 1.0
+
         // Create camera transformations
-        glm::mat4 view;
-        view = camera.GetViewMatrix();
-        glm::mat4 projection = glm::perspective(camera.Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
+        glm::mat4 containerview;
+        containerview = camera.GetViewMatrix();
+        glm::mat4 containerprojection = glm::perspective(camera.Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
         // Get the uniform locations
         GLint modelLoc = glGetUniformLocation(containerShader.Program, "model");
         GLint viewLoc  = glGetUniformLocation(containerShader.Program,  "view");
         GLint projLoc  = glGetUniformLocation(containerShader.Program,  "projection");
         // Pass the matrices to the shader
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(containerview));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(containerprojection));
 
         // Draw the container (using container's vertex attributes)
         glBindVertexArray(containerVAO);
-        glm::mat4 model;
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glm::mat4 containermodel;//initial value, dont have to adjust
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(containermodel));
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
 
@@ -215,14 +218,14 @@ int main()
         viewLoc  = glGetUniformLocation(lampShader.Program, "view");
         projLoc  = glGetUniformLocation(lampShader.Program, "projection");
         // Set matrices
-        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-        model = glm::mat4();
-        model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(containerview));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(containerprojection));
+        containermodel = glm::mat4();
+        containermodel = glm::translate(containermodel, lampPos);
+        containermodel = glm::scale(containermodel, glm::vec3(0.2f)); // Make it a smaller cube
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(containermodel));
         // Draw the light object (using light's vertex attributes)
-        glBindVertexArray(lightVAO);
+        glBindVertexArray(lampVao);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
 
