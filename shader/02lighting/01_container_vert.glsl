@@ -1,5 +1,5 @@
 //------------------------------
-//01_lighting_vert.glsl
+//01_container_vert.glsl
 //------------------------------
 
 #version 330 core

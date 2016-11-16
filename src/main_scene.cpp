@@ -89,8 +89,12 @@ int main()
 
     // Build and compile our shader program
     // ../shader/02lighting/.glsl
-    lab_shader lightingShader("../shader/02lighting/01_lighting_vert.glsl", "../shader/02lighting/01_lighting_frag.glsl");
-    lab_shader lampShader("../shader/02lighting/01_lamp_vert.glsl", "../shader/02lighting/01_lamp_frag.glsl");
+    lab_shader containerShader(
+    		"../shader/02lighting/01_container_vert.glsl",
+			"../shader/02lighting/01_container_frag.glsl");
+    lab_shader lampShader(
+    		"../shader/02lighting/01_lamp_vert.glsl",
+			"../shader/02lighting/01_lamp_frag.glsl");
 
     // Set up vertex data (and buffer(s)) and attribute pointers
     GLfloat vertices[] = {
@@ -179,9 +183,9 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Use cooresponding shader when setting uniforms/drawing objects
-        lightingShader.Use();
-        GLint objectColorLoc = glGetUniformLocation(lightingShader.Program, "objectColor");
-        GLint lightColorLoc  = glGetUniformLocation(lightingShader.Program, "lightColor");
+        containerShader.Use();
+        GLint objectColorLoc = glGetUniformLocation(containerShader.Program, "objectColor");
+        GLint lightColorLoc  = glGetUniformLocation(containerShader.Program, "lightColor");
         glUniform3f(objectColorLoc, 0.0f, 0.0f, 1.0f);
         glUniform3f(lightColorLoc,  1.0f, 0.5f, 1.0f);
 
@@ -190,9 +194,9 @@ int main()
         view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(camera.Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
         // Get the uniform locations
-        GLint modelLoc = glGetUniformLocation(lightingShader.Program, "model");
-        GLint viewLoc  = glGetUniformLocation(lightingShader.Program,  "view");
-        GLint projLoc  = glGetUniformLocation(lightingShader.Program,  "projection");
+        GLint modelLoc = glGetUniformLocation(containerShader.Program, "model");
+        GLint viewLoc  = glGetUniformLocation(containerShader.Program,  "view");
+        GLint projLoc  = glGetUniformLocation(containerShader.Program,  "projection");
         // Pass the matrices to the shader
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
