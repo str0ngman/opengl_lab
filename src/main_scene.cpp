@@ -23,10 +23,8 @@
 //utility class inclusion
 #include "lab_shader.h"
 #include "../util/test.h"
-
-//vertices:triangles, cubes, and other stuff
+#include "lab_Camera.h"
 #include "vertices.h"
-#include "camera.h"
 
 
 // Properties
@@ -39,7 +37,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void Do_Movement();
 
 // Camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+lab_Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 bool keys[1024];
 GLfloat lastX = 400, lastY = 300;
 bool firstMouse = true;
@@ -210,7 +208,7 @@ int main()
         Do_Movement();
 
         // Clear the colorbuffer
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Draw our first triangle
