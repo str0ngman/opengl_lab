@@ -90,55 +90,55 @@ int main()
     // Build and compile our shader program
     // ../shader/02lighting/.glsl
     lab_shader containerShader(
-    		"../shader/02lighting/01_container_vert.glsl",
-			"../shader/02lighting/01_container_frag.glsl");
+    		"../shader/02lighting/02basic_lighting/container.vert",
+			"../shader/02lighting/02basic_lighting/container.frag");
     lab_shader lampShader(
-    		"../shader/02lighting/01_lamp_vert.glsl",
-			"../shader/02lighting/01_lamp_frag.glsl");
+    		"../shader/02lighting/02basic_lighting/spotlight.vert",
+			"../shader/02lighting/02basic_lighting/spotlight.frag");
 
     // Set up vertex data (and buffer(s)) and attribute pointers
     GLfloat vertices[] = {
-        -0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f, 0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.0f, 0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, -1.0f,
 
-        -0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
+        -0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+         0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+         0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
 
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f, -0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,-1.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,-1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,-1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,-1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,-1.0f, 0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,-1.0f, 0.0f, 0.0f,
 
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,1.0f, 0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,1.0f, 0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,1.0f, 0.0f, 0.0f,
 
-        -0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f,  0.5f,
-        -0.5f, -0.5f, -0.5f,
+        -0.5f, -0.5f, -0.5f, 0.0f,-1.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,0.0f,-1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,0.0f,-1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,0.0f,-1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,0.0f,-1.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,0.0f,-1.0f, 0.0f,
 
-        -0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-         0.5f,  0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f, -0.5f
+        -0.5f,  0.5f, -0.5f,0.0f,  1.0f , 0.0f,
+         0.5f,  0.5f, -0.5f,0.0f,  1.0f , 0.0f,
+         0.5f,  0.5f,  0.5f,0.0f,  1.0f , 0.0f,
+         0.5f,  0.5f,  0.5f,0.0f,  1.0f , 0.0f,
+        -0.5f,  0.5f,  0.5f,0.0f,  1.0f , 0.0f,
+        -0.5f,  0.5f, -0.5f,0.0f,  1.0f , 0.0f
     };
     // First, set the container's VAO (and VBO)
     GLuint VBO, containerVAO;
@@ -150,8 +150,12 @@ int main()
 
     glBindVertexArray(containerVAO);
     // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(1);
+
+
     glBindVertexArray(0);
 
     // Then, we set the light's VAO (VBO stays the same. After all, the vertices are the same for the light object (also a 3D cube))
@@ -161,7 +165,7 @@ int main()
     // We only need to bind to the VBO (to link it with glVertexAttribPointer), no need to fill it; the VBO's data already contains all we need.
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     // Set the vertex attributes (only position data for the lamp))
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
 
@@ -184,11 +188,16 @@ int main()
 
         // Use cooresponding shader when setting uniforms/drawing objects
         containerShader.Use();
+
         GLint objectColorLoc = glGetUniformLocation(containerShader.Program, "objectColor");//0.0,0.0,1.0
         GLint lightColorLoc  = glGetUniformLocation(containerShader.Program, "lightColor");//1.0,0.5,1.0
+        GLint lampPosLoc = glGetUniformLocation(containerShader.Program, "lampPos");//0.0,0.0,1.0
+        GLint viewPosLoc = glGetUniformLocation(containerShader.Program, "viewPos");//0.0,0.0,1.0
 
-        glUniform3f(objectColorLoc, 0.0f, 0.0f, 1.0f);//set value for the objectColor
-        glUniform3f(lightColorLoc,  1.0f, 0.5f, 1.0f);
+        glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f);//set value for the objectColor
+        glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f);
+        glUniform3f(lampPosLoc, lampPos.x, lampPos.y, lampPos.z);
+        glUniform3f(viewPosLoc, camera.Position.x, camera.Position.y, camera.Position.z);
 
         //final color requires lightColor*objectColor, so it is 0, 0, 1.0
 
