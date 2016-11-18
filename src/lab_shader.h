@@ -61,10 +61,10 @@ public:
 		const GLchar* fShaderCode = fragmentCode.c_str();
 
 		//output using for debug
-		std::cout<<"vertex code---------------------\n";
+		//std::cout<<"vertex code---------------------\n";
         std::cout<<vShaderCode<<std::endl;
 
-        std::cout<<"fragment code-------------------\n";
+        //std::cout<<"fragment code-------------------\n";
         std::cout<<fShaderCode<<std::endl;
 
         //2.Compile Shaders

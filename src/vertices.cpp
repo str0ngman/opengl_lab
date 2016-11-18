@@ -8,6 +8,53 @@
 #include"vertices.h"
 #include"glm/glm.hpp"
 
+/**
+ * project:0203:Material
+ * floor: floor_square , floor_indices
+ * axis :axis
+ * box  : box_vertices
+ * spotlight : spotlight_vertices
+ *
+ *
+ */
+GLfloat floor_square[]={
+		-10.0f,-1.0f,-10.0f,//a
+		 10.0f,-1.0f,-10.0f,//b
+		 10.0f, 1.0f, 10.0f,//c
+		-10.0f,-1.0f, 10.0f
+};
+GLfloat floor_indices[]={
+		0,1,3,
+		1,2,3
+};
+
+//GLfloat axis[] = {
+//		0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,   //1 red
+//		20.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,   //2
+//
+//		0.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.0f,   //3 yellow
+//		0.0f, 20.0f, 0.0f, 1.0f, 0.5f, 0.0f,   //4
+//
+//		0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,   //5 blue
+//		0.0f, 0.0f, 20.0f, 0.0f, 0.0f, 1.0f,   //6 blue
+//		};
+
+
+GLfloat axis[] = {
+		0.0f, 0.0f, 0.0f,      1.0f,0.0f,0.0f,//1 red
+		8.0f, 0.0f, 0.0f,      1.0f,0.0f,0.0f,//2 red
+
+		0.0f, 0.0f, 0.0f,      1.0f,1.0f,0.0f,//3 yellow
+		0.0f, 8.0f, 0.0f,      1.0f,1.0f,0.0f,//4 yellow
+
+		0.0f, 0.0f, 0.0f,      0.0f,0.0f,1.0f,//5 blue
+		0.0f, 0.0f, 8.0f,      0.0f,0.0f,1.0f,//6 blue
+
+
+
+};
+/*
+ * ETC
 GLfloat basic_triangle[] = {
 // Positions          // Colors
 		0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // Bottom Right
@@ -183,3 +230,4 @@ void set_array() {
 	}
 
 }
+*/

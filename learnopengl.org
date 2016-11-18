@@ -1,42 +1,43 @@
 * TITLE: learnopengl.com
   Create Date: 2016_9_20
   Desc: refracture the knowledge points, lab notes and apis
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
-|  No | Title       | Stats    | Scene           | Concepts              | Q       | A |   |
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
-| 1.1 | IntrO       | Done     | /               | history               | /       | / |   |
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
-| 2.1 | OpenGL      | Done     | /               | is an api             | /       | / |   |
-|     |             |          |                 | Core-profile          |         |   |   |
-|     |             |          |                 | extensions            |         |   |   |
-|     |             |          |                 | state mahcine         |         |   |   |
-|     |             |          |                 | objects               |         |   |   |
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
-| 2.2 | Creat wnd   | Done     | /               | Libraries(GLFW, GLEW) | /       | / |   |
-|     |             |          |                 | Building Process      |         |   |   |
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
-| 2.3 | Hello Wnd   | DOne     | hello_window    | glfw, glew init       | /       | / |   |
-|     |             |          |                 | RENDER loop           |         |   |   |
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
-| 2.4 | Hello Trg   | Done     | hello_triangle  | vertex buffer object  | /       | / |   |
-|     |             |          |                 | vertex array object   |         |   |   |
-|     |             |          |                 | element buffer object |         |   |   |
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
-| 2.5 | Shaders     | Done     | tri_with_shader |                       | uniform | / | / |
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
-| 2.6 | Textures    | Done     |                 |                       |         |   |   |
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
-| 2.8 | Coordinates | On going |                 |                       |         |   |   |
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
-| 2.9 | Camera      | On going |                 |                       |         |   |   |
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
-| 3.1 | Colors      | Todo     | Basic_color     |                       | /       | / |   |
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
-| 3.2 |             |          |                 |                       |         |   |   |
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
-| 3.3 | Materials   | On going | Materials       |                       |         |   |   |
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
-|     |             |          |                 |                       |         |   |   |
+|-----+---------------+----------+------------------+-----------------------+---------+---+---|
+|  No | Title         | Stats    | Scene            | Concepts              | Q       | A |   |
+|-----+---------------+----------+------------------+-----------------------+---------+---+---|
+| 1.1 | IntrO         | Done     | /                | history               | /       | / |   |
+|-----+---------------+----------+------------------+-----------------------+---------+---+---|
+| 2.1 | OpenGL        | Done     | /                | is an api             | /       | / |   |
+|     |               |          |                  | Core-profile          |         |   |   |
+|     |               |          |                  | extensions            |         |   |   |
+|     |               |          |                  | state mahcine         |         |   |   |
+|     |               |          |                  | objects               |         |   |   |
+|-----+---------------+----------+------------------+-----------------------+---------+---+---|
+| 2.2 | Creat wnd     | Done     | /                | Libraries(GLFW, GLEW) | /       | / |   |
+|     |               |          |                  | Building Process      |         |   |   |
+|-----+---------------+----------+------------------+-----------------------+---------+---+---|
+| 2.3 | Hello Wnd     | DOne     | hello_window     | glfw, glew init       | /       | / |   |
+|     |               |          |                  | RENDER loop           |         |   |   |
+|-----+---------------+----------+------------------+-----------------------+---------+---+---|
+| 2.4 | Hello Trg     | Done     | hello_triangle   | vertex buffer object  | /       | / |   |
+|     |               |          |                  | vertex array object   |         |   |   |
+|     |               |          |                  | element buffer object |         |   |   |
+|-----+---------------+----------+------------------+-----------------------+---------+---+---|
+| 2.5 | Shaders       | Done     | tri_with_shader  |                       | uniform | / | / |
+|-----+---------------+----------+------------------+-----------------------+---------+---+---|
+| 2.6 | Textures      | Done     |                  |                       |         |   |   |
+|-----+---------------+----------+------------------+-----------------------+---------+---+---|
+| 2.8 | Coordinates   | On going |                  |                       |         |   |   |
+|-----+---------------+----------+------------------+-----------------------+---------+---+---|
+| 2.9 | Camera        | On going |                  |                       |         |   |   |
+|-----+---------------+----------+------------------+-----------------------+---------+---+---|
+| 3.1 | Colors        | Todo     | Basic_color      |                       | /       | / |   |
+|-----+---------------+----------+------------------+-----------------------+---------+---+---|
+| 3.2 | BasicLighting | Done     | BasicLighting    |                       |         |   |   |
+|-----+---------------+----------+------------------+-----------------------+---------+---+---|
+| 3.3 | Materials     | On going | Materials        |                       |         |   |   |
+|     |               |          | lightcolorChange |                       |         |   |   |
+|-----+---------------+----------+------------------+-----------------------+---------+---+---|
+|     |               |          |                  |                       |         |   |   |
 
 * DONE 1.1 INTRODUCTION 
 ** WELCOME TO OPENGL
@@ -676,9 +677,10 @@ color = vec4( lightColor * objectColr, 1.0f);
 
 
 * 3.3 Materials
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
-| 3.3 | Materials   | On going | Materials       |                       |         |   |   |
-|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+|-----+-----------+----------+------------------+---+---+---+---|
+| 3.3 | Materials | On going | Materials        |   |   |   |   |
+|     |           |          | lightcolorChange |   |   |   |   |
+|-----+-----------+----------+------------------+---+---+---+---|
 ** Keynotes
   .  define material for 3 color components
   .  in the fragment shader: 
@@ -693,9 +695,25 @@ color = vec4( lightColor * objectColr, 1.0f);
      }
 
      uniform Material material
+ 
   . Setting materials(Implementing a material system)
-    
+    //in vertex shader
+    vec3 ambient = lightColor * material.ambient;
+    vec3 diffuse = lightColor * (diff*material.diffuse);
+    float spec = pow(max(dot(viewDirection, reflectDirection),0.0,material.shiness);
+    vec3 specular = lightcolor * (spec * (material. specular);  
+ 
+  . use of structs in GLSL : 
+    just an ecapsulation of uniform varialbles.
 
+  . methods to give value to material
+   //main.cpp
+   GLint matAmientLoc = glGetUniformLocation(lightingShader.Program,"material.ambient");
+   glUniform3f(matAmbientLoc, 1.0f, 0.5f, 0.31f);
+
+  .Light Properties
+   Lights sources also have different intensities for light attributes.
+   
 * git command:
 **git log:
 git log --pretty=format:"%h - %an, %ar : %s"
