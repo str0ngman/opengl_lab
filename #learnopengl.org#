@@ -32,6 +32,10 @@
 |-----+-------------+----------+-----------------+-----------------------+---------+---+---|
 | 3.1 | Colors      | Todo     | Basic_color     |                       | /       | / |   |
 |-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 3.2 |             |          |                 |                       |         |   |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 3.3 | Materials   | On going | Materials       |                       |         |   |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
 |     |             |          |                 |                       |         |   |   |
 
 * DONE 1.1 INTRODUCTION 
@@ -603,7 +607,7 @@ glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
    
 *** Camera/ View space
    1. Camera Position
-   
+
 * TODO 3.1 Colors
 ** Introduction
    this chapter. we will discuss what colors are
@@ -670,6 +674,32 @@ color = vec4( lightColor * objectColr, 1.0f);
 #+END_SRC
 
 
+
+* 3.3 Materials
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 3.3 | Materials   | On going | Materials       |                       |         |   |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+** Keynotes
+  .  define material for 3 color components
+  .  in the fragment shader: 
+     ------------------------
+     #version 330 core
+     
+     struct Material {
+     vec3 ambient;
+     vec3 diffuse;
+     vec3 specular;
+     float shininess;
+     }
+
+     uniform Material material
+ 
+  . Setting materials(Implementing a material system)
+    //in vertex shader
+    vec3 ambient = lightColor * material.ambient;
+    vec3 diffuse = lightColor * (diff*material.diffuse);
+    float spec = pow(max(dot(vie  
+ 
 
 * git command:
 **git log:

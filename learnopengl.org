@@ -32,6 +32,10 @@
 |-----+-------------+----------+-----------------+-----------------------+---------+---+---|
 | 3.1 | Colors      | Todo     | Basic_color     |                       | /       | / |   |
 |-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 3.2 |             |          |                 |                       |         |   |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 3.3 | Materials   | On going | Materials       |                       |         |   |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
 |     |             |          |                 |                       |         |   |   |
 
 * DONE 1.1 INTRODUCTION 
@@ -670,6 +674,27 @@ color = vec4( lightColor * objectColr, 1.0f);
 #+END_SRC
 
 
+
+* 3.3 Materials
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+| 3.3 | Materials   | On going | Materials       |                       |         |   |   |
+|-----+-------------+----------+-----------------+-----------------------+---------+---+---|
+** Keynotes
+  .  define material for 3 color components
+  .  in the fragment shader: 
+     ------------------------
+     #version 330 core
+     
+     struct Material {
+     vec3 ambient;
+     vec3 diffuse;
+     vec3 specular;
+     float shininess;
+     }
+
+     uniform Material material
+  . Setting materials(Implementing a material system)
+    
 
 * git command:
 **git log:
