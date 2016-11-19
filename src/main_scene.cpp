@@ -89,7 +89,6 @@ int main()
 	  //glEnable(GL_DEPTH_TEST);
 
       //PART I: AXIS
-
 	  lab_shader axisShader("../shader/03Material/axis_shader.vs","../shader/03Material/axis_shader.frag");
       GLuint axis_vao,axis_vbo;
       glGenVertexArrays(1,&axis_vao);
@@ -156,11 +155,21 @@ int main()
     	  glBindVertexArray(axis_vao);
      	  glDrawArrays(GL_LINES,0,6);
     	  glBindVertexArray(0);
-    	  // glDisableClientState(GL_VERTEX_ARRAY);
+    	  glDisableClientState(GL_VERTEX_ARRAY);
     	  // Swap the screen buffers
 
           floorShader.Use();
-          glBindVertexArray(floor_vao);
+          view = camera.GetViewMatrix();
+          projection = glm::perspective(camera.Zoom,(float)WIDTH/(float)HEIGHT,0.1f,1000.0f);
+    	  modelLoc = glGetUniformLocation(floorShader.Program,"model");
+    	  viewLoc = glGetUniformLocation(floorShader.Program,"view");
+    	  projLoc = glGetUniformLocation(floorShader.Program,"projection");
+
+          glUniformMatrix4fv(modelLoc,1,GL_FALSE,glm::value_ptr(model));
+    	  glUniformMatrix4fv(viewLoc,1,GL_FALSE,glm::value_ptr(view));
+    	  glUniformMatrix4fv(projLoc,1,GL_FALSE,glm::value_ptr(projection));
+
+    	  glBindVertexArray(floor_vao);
           glDrawArrays(GL_TRIANGLES,0,3);
           glBindVertexArray(0);
     	  glfwSwapBuffers(window);
