@@ -37,7 +37,7 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void do_movement();
 
 //Render Objects
-extern GLfloat floor_square[];
+extern GLfloat floor_square[12];
 extern GLfloat floor_indices[];
 extern GLfloat axis[36];
 
@@ -45,13 +45,12 @@ extern GLfloat axis[36];
 const GLuint WIDTH = 800, HEIGHT = 600;
 
 // Camera
-lab_Camera  camera(glm::vec3(0.0f, 0.0f, 3.0f));
+lab_Camera  camera(glm::vec3(0.0f, 0.0f, 100.0f));
 GLfloat lastX  =  WIDTH  / 2.0;
 GLfloat lastY  =  HEIGHT / 2.0;
 bool    keys[1024];
 
 // Light attributes
-
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -76,7 +75,7 @@ int main()
 	  glfwSetScrollCallback(window, scroll_callback);
 
 	  //glfw Options
-	  //glfwSetInputMode(window, GLFW_CURSOR,GLFW_CURSOR_DISABLED);
+	  glfwSetInputMode(window, GLFW_CURSOR,GLFW_CURSOR_DISABLED);
 
 	  glewExperimental = GL_TRUE;
 
@@ -89,7 +88,9 @@ int main()
 	  //OpenGL options
 	  //glEnable(GL_DEPTH_TEST);
 
-      //PART I: RENDER AXIS
+      //PART I: AXIS
+
+	  lab_shader axisShader("../shader/03Material/axis_shader.vs","../shader/03Material/axis_shader.frag");
       GLuint axis_vao,axis_vbo;
       glGenVertexArrays(1,&axis_vao);
       glGenBuffers(1,&axis_vbo);
@@ -108,20 +109,60 @@ int main()
       glBindBuffer(GL_ARRAY_BUFFER,0);
       glBindVertexArray(0);
 
-      lab_shader axisShader("../shader/03Material/axis_shader.vs","../shader/03Material/axis_shader.frag");
+
+
+      //PART II: FLOOR SQUARE
+      lab_shader floorShader("../shader/03Material/floor_shader.vs","../shader/03Material/floor_shader.frag");
+      GLuint floor_vao, floor_vbo;
+      glGenVertexArrays(1,&floor_vao);
+      glGenBuffers(1, &floor_vbo);
+
+      glBindVertexArray(floor_vao);
+      glBindBuffer(GL_ARRAY_BUFFER,floor_vbo);
+      glBufferData(GL_ARRAY_BUFFER,sizeof(floor_square),floor_square,GL_STATIC_DRAW);
+
+      glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,3*sizeof(GLfloat),(GLvoid*)0);
+      glEnableVertexAttribArray(0);
+
+
       // Game loop
       while (!glfwWindowShouldClose(window))
       {
+          // Calculate deltatime of current frame
+          GLfloat currentFrame = glfwGetTime();
+          deltaTime = currentFrame - lastFrame;
+          lastFrame = currentFrame;
+
     	  glfwPollEvents();
+    	  do_movement();
     	  glClearColor( GLfloat(212.0f/256.0f),GLfloat(212.0f/256.0f),GLfloat(212.0f/256.0f),1.0f);
     	  glClear(GL_COLOR_BUFFER_BIT );
 
     	  axisShader.Use();
+    	  glm::mat4 view;
+    	  view = camera.GetViewMatrix();
+    	  glm::mat4 projection;
+    	  projection = glm::perspective(camera.Zoom,(float)WIDTH/(float)HEIGHT,0.1f,1000.0f);
+    	  GLint modelLoc = glGetUniformLocation(axisShader.Program,"model");
+    	  GLint viewLoc = glGetUniformLocation(axisShader.Program,"view");
+    	  GLint projLoc = glGetUniformLocation(axisShader.Program,"projection");
+
+    	  glm::mat4 model;
+          glUniformMatrix4fv(modelLoc,1,GL_FALSE,glm::value_ptr(model));
+    	  glUniformMatrix4fv(viewLoc,1,GL_FALSE,glm::value_ptr(view));
+    	  glUniformMatrix4fv(projLoc,1,GL_FALSE,glm::value_ptr(projection));
+
+
     	  glBindVertexArray(axis_vao);
-    	  glDrawArrays(GL_LINES,0,6);
+     	  glDrawArrays(GL_LINES,0,6);
     	  glBindVertexArray(0);
     	  // glDisableClientState(GL_VERTEX_ARRAY);
     	  // Swap the screen buffers
+
+          floorShader.Use();
+          glBindVertexArray(floor_vao);
+          glDrawArrays(GL_TRIANGLES,0,3);
+          glBindVertexArray(0);
     	  glfwSwapBuffers(window);
       }
 
